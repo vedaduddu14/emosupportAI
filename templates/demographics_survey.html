@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demographics Survey</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_chat.css') }}">
+    <style>
+        #demographics-modal .modal-card {
+            width: 95vw !important;
+            max-width: 800px !important;
+            max-height: 95vh !important;
+            margin: auto !important;
+        }
+        #demographics-modal .modal-content {
+            max-height: calc(95vh - 120px) !important;
+            overflow-y: auto !important;
+            padding: 2rem !important;
+            background-color: white !important;
+            border-radius: 6px !important;
+            width: 100% !important;
+        }
+        #demographics-modal .modal-card-head {
+            flex-shrink: 0 !important;
+        }
+        #demographics-modal .modal-card-foot {
+            flex-shrink: 0 !important;
+            justify-content: flex-end !important;
+        }
+        .survey-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .survey-section:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="modal is-active" id="demographics-modal">
+    <form id="demographicsForm">
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Demographics Survey</p>
+            </header>
+            <div class="modal-content">
+
+                <div class="block is-size-5">
+                    Please answer the following questions about yourself:
+                </div>
+
+                <!-- Age -->
+                <div class="survey-section">
+                    <div class="field">
+                        <label class="label">Age</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="age" required>
+                                    <option value="">Select your age range</option>
+                                    <option value="18-24">18-24</option>
+                                    <option value="25-30">25-30</option>
+                                    <option value="31-40">31-40</option>
+                                    <option value="41-50">41-50</option>
+                                    <option value="51-60">51-60</option>
+                                    <option value="60+">60+</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gender -->
+                <div class="survey-section">
+                    <div class="field">
+                        <label class="label">Gender</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="gender" required>
+                                    <option value="">Select your gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="non-binary">Non-binary</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div class="survey-section">
+                    <div class="field">
+                        <label class="label">Highest Level of Education</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="education" required>
+                                    <option value="">Select your education level</option>
+                                    <option value="high-school">High School Diploma</option>
+                                    <option value="bachelors">Bachelor's 4-Year Degree</option>
+                                    <option value="graduate">Graduate Degree</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Industry/Occupations -->
+                <div class="survey-section">
+                    <div class="field">
+                        <label class="label">Service Industry / Occupation</label>
+                        <div class="control">
+                            <input class="input" type="text" name="occupation" placeholder="e.g., Retail, Hospitality, Call Center, etc." required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Years of Experience -->
+                <div class="survey-section">
+                    <div class="field">
+                        <label class="label">Years of Working Experience as a Customer Service Representative</label>
+                        <div class="control">
+                            <input class="input" type="text" name="years_experience" placeholder="e.g., 2 years, 5 years, etc." required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GenAI Familiarity -->
+                <div class="survey-section">
+                    <div class="field">
+                        <label class="label">How familiar are you with GenAI tools (e.g., ChatGPT, Copilot)?</label>
+                        <div class="control content">
+                            <label class="radio"><input type="radio" name="genai_familiarity" value="1" required> 1 - Not at all familiar</label>
+                            <label class="radio"><input type="radio" name="genai_familiarity" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="genai_familiarity" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="genai_familiarity" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="genai_familiarity" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="genai_familiarity" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="genai_familiarity" value="7"> 7 - Extremely familiar</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GenAI Attitude -->
+                <div class="survey-section">
+                    <div class="field">
+                        <label class="label">What is your overall attitude toward GenAI tools?</label>
+                        <div class="control content">
+                            <label class="radio"><input type="radio" name="genai_attitude" value="1" required> 1 - Very negative</label>
+                            <label class="radio"><input type="radio" name="genai_attitude" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="genai_attitude" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="genai_attitude" value="4"> 4 - Neutral</label>
+                            <label class="radio"><input type="radio" name="genai_attitude" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="genai_attitude" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="genai_attitude" value="7"> 7 - Very positive</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <footer class="modal-card-foot">
+                <button class="button is-success" type="submit">Submit & Complete Study</button>
+            </footer>
+        </div>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='demographics_survey.js') }}"></script>
+
+</body>
+</html>

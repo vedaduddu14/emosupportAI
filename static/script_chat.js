@@ -287,49 +287,46 @@ function createFooter(support_type) {
   sliderContainer.style.padding = '0 4px';
 
   const leftLabel = document.createElement('span');
-  leftLabel.textContent = 'Helpful';
+  leftLabel.textContent = 'Unhelpful';
   leftLabel.style.marginRight = '4px';
-  leftLabel.style.width = '4em';
   leftLabel.classList.add('slider-label');
   sliderContainer.appendChild(leftLabel);
-
-  const leftLabelIcon = document.createElement('span');
-  leftLabelIcon.classList.add('icon', 'is-small', 'slider-icon');
-    var icon = document.createElement('i');
-    icon.classList.add('fas', "fa-thumbs-up");
-    leftLabelIcon.appendChild(icon);
-    sliderContainer.appendChild(leftLabelIcon);
 
   const input = document.createElement('input');
   input.id = `${support_type}-feedback`;
   input.setAttribute('type', 'range');
   input.classList.add('slider');
   input.setAttribute('name', `${support_type}-helpful_unhelpful`);
-  input.setAttribute('min', '-2');
-  input.setAttribute('max', '2');
-  input.setAttribute('value', '0');
+  input.setAttribute('min', '0');
+  input.setAttribute('max', '100');
+  input.setAttribute('value', '50');
   input.setAttribute('step', '1');
-  input.style.margin = '0 4px';
-  input.style.width = 'fit-content';
-  input.style.flex = '1';
   input.addEventListener('input', function () {
     updateInTask(this.name, this.value);
+    // Update value display
+    const valueDisplay = document.getElementById(`${support_type}-value`);
+    if (valueDisplay) {
+      valueDisplay.textContent = this.value;
+    }
   });
   sliderContainer.appendChild(input);
 
+  // Add value display
+  const valueDisplay = document.createElement('span');
+  valueDisplay.id = `${support_type}-value`;
+  valueDisplay.textContent = '50';
+  valueDisplay.style.marginLeft = '4px';
+  valueDisplay.style.minWidth = '2.5em';
+  valueDisplay.style.textAlign = 'center';
+  valueDisplay.style.fontWeight = 'bold';
+  valueDisplay.style.fontSize = '0.9em';
+  sliderContainer.appendChild(valueDisplay);
+
   const rightLabel = document.createElement('span');
-  rightLabel.textContent = 'Unhelpful';
+  rightLabel.textContent = 'Helpful';
   rightLabel.style.marginLeft = '4px';
-  rightLabel.style.width = '4em';
   rightLabel.classList.add('slider-label');
   sliderContainer.appendChild(rightLabel);
-
-  const rightLabelIcon = document.createElement('span');
-  rightLabelIcon.classList.add('icon', 'is-small', 'slider-icon');
-    var icon = document.createElement('i');
-    icon.classList.add('fas', "fa-thumbs-down");
-    rightLabelIcon.appendChild(icon);
-    sliderContainer.appendChild(rightLabelIcon);
 
   footerItem.appendChild(sliderContainer);
   footer.appendChild(footerItem);
@@ -430,7 +427,14 @@ function retrieveEmoSupport(message, support_type) {
   card = document.createElement('div');
   card.id = cardId;
   card.classList.add('card');
-  card.style.marginBottom = '5%';
+  card.style.marginBottom = '8px';
+
+  // Add tracking class for mouse tracking
+  if (support_type === 'TYPE_SENTIMENT') {
+    card.classList.add('emo-sentiment-card');
+  } else if (support_type === 'TYPE_EMO_REFRAME') {
+    card.classList.add('emo-reframe-card');
+  }
 
   header = document.createElement('header');
   header.id = headerId;

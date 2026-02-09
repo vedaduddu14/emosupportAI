@@ -36,16 +36,27 @@ randomQueue = [
 
 '''
 For actual study scenario.
-Unlike testing we will keep "grateful": 0, "ranting": 1, "expression":1
-Other conditions will maintain fixed order in the queue
+2 rounds per participant:
+- Round 1: No agents (baseline)
+- Round 2: One of 4 conditions (no agents, emo only, info only, both agents)
+Client behavior: "grateful": 0, "ranting": 1, "expression": 1, "civil": 0
 '''
+
+# Round 1 is always the same (no agents)
+ROUND_1 = { "id": 1, "grateful": 0, "ranting": 1, "expression": 1, "civil": 0, "info": 0, "emo": 0}
+
+# Round 2 - Four possible conditions
+ROUND_2_CONDITIONS = {
+    "no_agents": { "id": 2, "grateful": 0, "ranting": 1, "expression": 1, "civil": 0, "info": 0, "emo": 0},
+    "emo_only": { "id": 2, "grateful": 0, "ranting": 1, "expression": 1, "civil": 0, "info": 0, "emo": 1},
+    "info_only": { "id": 2, "grateful": 0, "ranting": 1, "expression": 1, "civil": 0, "info": 1, "emo": 0},
+    "both_agents": { "id": 2, "grateful": 0, "ranting": 1, "expression": 1, "civil": 0, "info": 1, "emo": 1}
+}
+
+# Default study queue (will be customized based on condition assignment)
 studyQueue = [
-    { "id": 1, "grateful": 0, "ranting": 1, "expression":1, "civil": 1, "info": 1, "emo": 0},
-    { "id": 1, "grateful": 0, "ranting": 1, "expression":1, "civil": 1, "info": 1, "emo": 0},
-    { "id": 1, "grateful": 0, "ranting": 1, "expression":1, "civil": 0, "info": 1, "emo": 0},
-    { "id": 1, "grateful": 0, "ranting": 1, "expression":1, "civil": 0, "info": 1, "emo": 1},
-    { "id": 1, "grateful": 0, "ranting": 1, "expression":1, "civil": 0, "info": 1, "emo": 1},
-    { "id": 1, "grateful": 0, "ranting": 1, "expression":1, "civil": 0, "info": 1, "emo": 1}
+    ROUND_1,
+    ROUND_2_CONDITIONS["both_agents"]  # Default to both agents, will be overridden
 ]
 
 complaintTypes = [
@@ -56,18 +67,35 @@ complaintTypes = [
     "Resolution"
 ]
 
-def get_study_queue(scenario):
-    names = [client['name'] for client  in randomQueue]
+def get_study_queue(scenario, round2_condition="both_agents"):
+    """
+    Create a 2-round study queue for the given scenario.
+
+    Args:
+        scenario: "Hotel" or "Airline"
+        round2_condition: One of "no_agents", "emo_only", "info_only", "both_agents"
+
+    Returns:
+        List with 2 client configurations (Round 1 and Round 2)
+    """
+    names = [client['name'] for client in randomQueue]
     random.shuffle(names)
     random.shuffle(complaintTypes)
 
-    for client_id in range(len(studyQueue)):
-        client_name = names[client_id % len(names)]
-        complaint_type = complaintTypes[client_id % len(complaintTypes)]
+    # Create 2-round queue
+    queue = [
+        copy.deepcopy(ROUND_1),
+        copy.deepcopy(ROUND_2_CONDITIONS[round2_condition])
+    ]
 
-        studyQueue[client_id]['category'] = complaint_type
+    # Assign names, domains, categories, and avatars
+    for client_id in range(2):
         client_name = names[client_id]
-        studyQueue[client_id]['name'] = client_name
-        studyQueue[client_id]['domain'] = scenario
-        studyQueue[client_id]['avatar'] = "https://avatar.iran.liara.run/username?username="+client_name.replace(' ','+')
-    return copy.deepcopy(studyQueue)
+        complaint_type = complaintTypes[client_id]
+
+        queue[client_id]['category'] = complaint_type
+        queue[client_id]['name'] = client_name
+        queue[client_id]['domain'] = scenario
+        queue[client_id]['avatar'] = "https://avatar.iran.liara.run/username?username="+client_name.replace(' ','+')
+
+    return queue

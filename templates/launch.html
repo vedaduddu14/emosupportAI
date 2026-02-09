@@ -2,15 +2,15 @@
 <html>
 
 <script>
-    function startChatSession(scenario) {
+    function startChatSession() {
         var params = window.location.search
-        window.location.href = '/chat/'+scenario+'/'+params;
+        window.location.href = '/chat/Hotel/'+params;
     }
 </script>
 
 <head>
     <!-- Bulma Version 1-->
-    <title>Pro-Pilot Prototype</title>
+    <title>Emo-Support AI Prototype</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.1/css/bulma.min.css">
@@ -39,7 +39,7 @@
 
         <div class="container">
             <h2 class="subtitle subtitled is-3 mb-6">
-                Pro-Pilot: Client Support Simulation
+                Emo-Support AI: Client Support Simulation
             </h2>
             <div class="content">
                 <ul>
@@ -48,7 +48,7 @@
                     <br>
                         <strong>You will receive an additional dollar for every star you receive across the tasks.</strong>
                     </li>
-                    <li>Our prototype AI-coworker, named Pro-Pilot (denoted by this icon:
+                    <li>Our prototype AI-coworker, named Emo-Support AI (denoted by this icon:
                         <figure class="image is-24x24" style="
                             display: inline-block;
                             margin-left: 1em;
@@ -62,59 +62,29 @@
                     <li>After each client conversation ends, 
                     <br>    
                         <strong>you will be required to complete a survey describing your experience with the client.</strong> </li>
-                    Please click on the scenario you were assigned.
+                    Please click the button below to begin.
 
                 </ul>
             </div>
-            <div class="columns  is-vcentered reverse-columns">
+            <div class="columns is-vcentered">
 
-
-                <div class="column
-                      is-5-desktop
-                      is-5-widescreen
-                      is-5-fullhd ">
-
-
-                    <div class="card" onclick="startChatSession('hotel');" style="cursor: pointer;">
-                        <header class="card-header">
-                            <p class="card-header-title">Scenario: Hotel</p>
-                            <figure class="image is-1 is-64x64" style="margin: 12px">
-                                <img class="is-rounded" style="background-color: beige;" src="{{url_for('static', filename='icon_hotel.png')}}">
-                            </figure>
-                        </header>
-                    </div>
-
+                <div class="column is-5-desktop is-5-widescreen is-5-fullhd">
+                    <button class="button is-link is-large" onclick="startChatSession();" style="cursor: pointer;">
+                        Begin: Hotel Scenario
+                    </button>
                 </div>
-                <div class="column
-                      is-5-desktop
-                      is-5-widescreen
-                      is-5-fullhd ">
-
-
-                    <div class="card"  onclick="startChatSession('airlines');" style="cursor: pointer;">
-                        <header class="card-header">
-                            <p class="card-header-title">Scenario: Airlines</p>
-                            <figure class="image is-1 is-64x64" style="margin: 12px">
-                                <img class="is-rounded" style="background-color: beige;" src="{{url_for('static', filename='icon_airlines.png')}}">
-                            </figure>
-                        </header>
-                    </div>
-
-
-                </div>
-
 
             </div>
 
             <div class="columns is-vcentered">
 
                 <div class="block column">
-                    Contact: <a href="https://vedantswain.com/">Dr. Vedant Das Swain</a> </br>
-                    Mail: <a href="mailto:v.dasswain@northeastern.edu">v.dasswain@northeastern.edu</a>
+                    Contact: Dr. Haylee Min </br>
+                    Mail: <a href="mailto:hanyimin@illinois.edu">hanyimin@illinois.edu</a>
                 </div>
 
                 <figure class="image column" >
-                    <img src="{{url_for('static', filename='N-Motto Wordmark_RGB_186+K.png')}}"
+                    <img src="{{url_for('static', filename='uiuc-logo.png')}}"
                          style="
                                         height: 6em;
                                         width: unset;">

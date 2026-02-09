@@ -19,8 +19,7 @@ function updateSlider(sliderName, slideAmount) {
 // }
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('start-modal').classList.add('is-active');
-
+    // Modal is already active via HTML is-active class
     const form = document.getElementById('preFeedbackForm');
     form.addEventListener('submit', function(e) {
         e.preventDefault(); 
@@ -28,20 +27,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const formValues = {};
         formData.forEach((value, key) => { formValues[key] = value; });
 
-        // Check if the all radio questions were answered
-        radioKeysValidation = ["interaction_polite","interaction_dignity","interaction_respect","cognitive_demands","cognitive_resources"]
+        // Check if all 3 emotion regulation questions were answered
+        radioKeysValidation = ["emotion_q1", "emotion_q2", "emotion_q3"]
         allKeysExist = radioKeysValidation.every(key => Object.keys(formValues).includes(key));
         if (!allKeysExist){
-            alert("Please respond to all radio button questions.");
+            alert("Please respond to all questions.");
             return;
         }
-        // Check if the all slider questions were answered. Need to check different dictionary because of default slider values.
-        sliderKeysValidation = ["affect_valence","affect_arousal" ]
-        allKeysExist = sliderKeysValidation.every(key => Object.keys(sliderValues).includes(key));
-        if (!allKeysExist){
-            alert("Please respond to all slider questions. If you would like to keep the value at the starting position, please move the slider back and forth to confirm your selection.");
-            return;
-        }
+
+        // Calculate SuppScore
+        const q1 = parseFloat(formValues['emotion_q1']);
+        const q2 = parseFloat(formValues['emotion_q2']);
+        const q3 = parseFloat(formValues['emotion_q3']);
+        const suppScore = (q1 + q2 + q3) / 3;
+
+        // Classify EmotionRegulation_Type
+        const emotionRegulationType = suppScore >= 4.5 ? "Suppressor" : "NonSuppressor";
+
+        // Add to data being sent
+        formValues['supp_score'] = suppScore;
+        formValues['emotion_regulation_type'] = emotionRegulationType;
         const sessionId = window.location.pathname.split('/')[2];
         const clientParam = window.location.href.split('?')[1];
 

@@ -37,20 +37,28 @@
 </head>
 <body>
     <div class="container">
-        <div class="buttons has-addons" style="padding: 0.5em;">
-            <!-- button link to conversation history -->
-            <button class="button is-light" onclick="goToHistoryPage('{{ session_id }}')">
-            <span class="icon">
-                <i class="fas fa-otter"></i>
-            </span>
-            </button>
+        <img src="{{ url_for('static', filename='pro-graphic.png') }}" alt="Logo" class="logo">
+
+        <h1 class="title is-3" style="margin-top: 40px;">Thank You!</h1>
+        <p class="subtitle is-5" style="margin-top: 20px;">
+            You have successfully completed the study.
+        </p>
+        <p class="subtitle is-5" style="margin-top: 10px; color: #4a4a4a;">
+            You will now be redirected back to Prolific with your completion code.
+        </p>
+
+        <!-- Temporary note for testing -->
+        <div class="notification is-info is-light" style="max-width: 600px; margin: 40px auto;">
+            <p><strong>Note for testing:</strong> Prolific redirect with completion code will be implemented in the production version.</p>
         </div>
 
-
-        <img src="{{ url_for('static', filename='pro-graphic.png') }}" alt="Logo" class="logo">
-        <p class="survey-link">
-            <a href="https://neu.co1.qualtrics.com/jfe/form/SV_2gwveVtVLewIgcu?session_id={{session_id}}" target="_blank">Click to Complete Exit Survey</a>
-        </p>
+        <!-- Optional: View conversation history (can be removed for production) -->
+        <div style="margin-top: 30px;">
+            <button class="button is-light" onclick="goToHistoryPage('{{ session_id }}')">
+                <span class="icon"><i class="fas fa-history"></i></span>
+                <span>View Conversation History</span>
+            </button>
+        </div>
     </div>
 </body>
 </html>

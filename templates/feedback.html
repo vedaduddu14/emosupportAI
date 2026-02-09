@@ -5,142 +5,421 @@
     <title>Post-task Survey</title>
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style_chat.css') }}">
+    <style>
+        /* Full screen survey modal - Override Bulma defaults */
+        #surveyModal .modal-card {
+            width: 95vw !important;
+            max-width: 1200px !important;
+            max-height: 95vh !important;
+            margin: auto !important;
+        }
+        #surveyModal .modal-content {
+            max-height: calc(95vh - 120px) !important;
+            overflow-y: auto !important;
+            padding: 2rem !important;
+            background-color: white !important;
+            border-radius: 6px !important;
+            width: 100% !important;
+        }
+        #surveyModal .modal-card-head {
+            flex-shrink: 0 !important;
+        }
+        #surveyModal .modal-card-foot {
+            flex-shrink: 0 !important;
+            justify-content: space-between !important;
+        }
+        .survey-page { display: none; }
+        .survey-page.active { display: block; }
+        .page-indicator {
+            font-size: 0.9rem;
+            color: #888;
+            align-self: center;
+        }
+    </style>
 </head>
 <body>
 
 <form id="feedbackForm">
-    <div class="modal" id="surveyModal">
-        <div class="modal-content">
+    <div class="modal is-active" id="surveyModal">
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Round 2 Complete - Post-Task Survey</p>
+            </header>
+            <div class="modal-content">
 
-            <!-- Interaction -->
+            <!-- ===== PAGE 1: Q1, Q2 ===== -->
+            <div class="survey-page active" data-page="1">
+
+            <!-- 1. Perceived Advice Quality Scale -->
             <div class="block survey-section">
                 <div class="control content">
-                    <h5>Q1. To what extent do you agree with the following statements about the client you conversed with ？</h5>
-                    <h6>The client treated me in a polite manner:</h6>
-                        <label class="radio"><input type="radio" name="interaction_polite" value="-3"> Strongly disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_polite" value="-2"> Disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_polite" value="-1"> Somewhat disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_polite" value="0"> Neither agree nor disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_polite" value="1"> Somewhat agree</label>
-                        <label class="radio"><input type="radio" name="interaction_polite" value="2"> Agree</label>
-                        <label class="radio"><input type="radio" name="interaction_polite" value="3"> Strongly agree</label>
+                    <h5>Q1. I feel the system was:</h5>
 
+                    <h6>Helpful:</h6>
+                    <label class="radio"><input type="radio" name="advice_helpful" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="advice_helpful" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="advice_helpful" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="advice_helpful" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="advice_helpful" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="advice_helpful" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="advice_helpful" value="7"> Strongly agree</label>
                 </div>
+
                 <div class="control content">
-
-                    <h6>The client treated me with dignity:</h6>
-                        <label class="radio"><input type="radio" name="interaction_dignity" value="-3"> Strongly disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_dignity" value="-2"> Disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_dignity" value="-1"> Somewhat disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_dignity" value="0"> Neither agree nor disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_dignity" value="1"> Somewhat agree</label>
-                        <label class="radio"><input type="radio" name="interaction_dignity" value="2"> Agree</label>
-                        <label class="radio"><input type="radio" name="interaction_dignity" value="3"> Strongly agree</label>
-
+                    <h6>Supportive:</h6>
+                    <label class="radio"><input type="radio" name="advice_supportive" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="advice_supportive" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="advice_supportive" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="advice_supportive" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="advice_supportive" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="advice_supportive" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="advice_supportive" value="7"> Strongly agree</label>
                 </div>
-                <div class="control content">
 
-                    <h6>The client treated me with respect:</h6>
-                        <label class="radio"><input type="radio" name="interaction_respect" value="-3"> Strongly disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_respect" value="-2"> Disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_respect" value="-1"> Somewhat disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_respect" value="0"> Neither agree nor disagree</label>
-                        <label class="radio"><input type="radio" name="interaction_respect" value="1"> Somewhat agree</label>
-                        <label class="radio"><input type="radio" name="interaction_respect" value="2"> Agree</label>
-                        <label class="radio"><input type="radio" name="interaction_respect" value="3"> Strongly agree</label>
+                <div class="control content">
+                    <h6>Informative:</h6>
+                    <label class="radio"><input type="radio" name="advice_informative" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="advice_informative" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="advice_informative" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="advice_informative" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="advice_informative" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="advice_informative" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="advice_informative" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>Compassionate:</h6>
+                    <label class="radio"><input type="radio" name="advice_compassionate" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="advice_compassionate" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="advice_compassionate" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="advice_compassionate" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="advice_compassionate" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="advice_compassionate" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="advice_compassionate" value="7"> Strongly agree</label>
                 </div>
             </div>
 
-            <!-- Cognitive Demands/Resources -->
+            <!-- 2. Surface Acting -->
             <div class="block survey-section">
                 <div class="control content">
-                    <h5>Q2. In the context of your last conversation...?</h5>
-                    <h6>How would you rate the demands on you:</h6>
-                        <label class="radio"><input type="radio" name="cognitive_demands" value="1"> Very low</label>
-                        <label class="radio"><input type="radio" name="cognitive_demands" value="2"> Low</label>
-                        <label class="radio"><input type="radio" name="cognitive_demands" value="3"> Moderate</label>
-                        <label class="radio"><input type="radio" name="cognitive_demands" value="4"> High</label>
-                        <label class="radio"><input type="radio" name="cognitive_demands" value="5"> Very high</label>
-                </div>
-                <div class="control content">
-                    <h6>How would you rate the resources available to you:</h6>
-                        <label class="radio"><input type="radio" name="cognitive_resources" value="1"> Very low</label>
-                        <label class="radio"><input type="radio" name="cognitive_resources" value="2"> Low</label>
-                        <label class="radio"><input type="radio" name="cognitive_resources" value="3"> Moderate</label>
-                        <label class="radio"><input type="radio" name="cognitive_resources" value="4"> High</label>
-                        <label class="radio"><input type="radio" name="cognitive_resources" value="5"> Very high</label>
-                </div>
-            </div>                
+                    <h5>Q2. Surface Acting</h5>
 
-            <!-- Valence/Arousal -->
-            <div class="block survey-section">
-                <div class="control content">
-                    <h5>Q3. How do you feel after the conversation?</h5>
-                    <h6>Rate your level of pleasure:</h6>
-                    <div class="slider-container">
-                        <span>Negative</span>
-                        <input type="range" name="affect_valence" min="-2" max="2" oninput="updateSlider(this.name, this.value)"  class="slider">
-                        <span>Positive</span>
-                    </div>
+                    <h6>I put on an act in order to deal with customers in an appropriate way:</h6>
+                    <label class="radio"><input type="radio" name="surface_act" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="surface_act" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="surface_act" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="surface_act" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="surface_act" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="surface_act" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="surface_act" value="7"> Strongly agree</label>
                 </div>
+
                 <div class="control content">
-                    <h6>Rate your level of energy:</h6>
-                    <div class="slider-container">
-                        <span>Calm</span>
-                        <input type="range" name="affect_arousal" min="-2" max="2" oninput="updateSlider(this.name, this.value)"  class="slider">
-                        <span>Excited</span>
-                    </div>
+                    <h6>I put on a "mask" in order to display the emotions I need for the job:</h6>
+                    <label class="radio"><input type="radio" name="surface_mask" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="surface_mask" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="surface_mask" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="surface_mask" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="surface_mask" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="surface_mask" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="surface_mask" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>I fake the emotions I show when dealing with customers:</h6>
+                    <label class="radio"><input type="radio" name="surface_fake" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="surface_fake" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="surface_fake" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="surface_fake" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="surface_fake" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="surface_fake" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="surface_fake" value="7"> Strongly agree</label>
                 </div>
             </div>
 
-            <!-- Support -->
+            </div>
+
+            <!-- ===== PAGE 2: Q3, Q4 ===== -->
+            <div class="survey-page" data-page="2">
+
+            <!-- 3. Deep Acting -->
             <div class="block survey-section">
                 <div class="control content">
-                    <h5>Q4. How did you feel after reading the messages from Pro-pilot?</h5>
-                    <div class="slider-container">
-                        <span>Effective</span>
-                        <input type="range" name="support_effective" min="-2" max="2" oninput="updateSlider(this.name, this.value)" class="slider">
-                        <span>Ineffective</span>
-                    </div>
-                    <div class="slider-container">
-                        <span>Helpful</span>
-                        <input type="range" name="support_helpful" min="-2" max="2" oninput="updateSlider(this.name, this.value)" class="slider">
-                        <span>Unhelpful</span>
-                    </div>
-                    <div class="slider-container">
-                        <span>Beneficial</span>
-                        <input type="range" name="support_beneficial" min="-2" max="2" oninput="updateSlider(this.name, this.value)" class="slider">
-                        <span>Not Beneficial</span>
-                    </div>
-                    <div class="slider-container">
-                        <span>Adequate</span>
-                        <input type="range" name="support_adequate" min="-2" max="2" oninput="updateSlider(this.name, this.value)" class="slider">
-                        <span>Inadequate</span>
-                    </div>
-                    <div class="slider-container">
-                        <span>Sensitive</span>
-                        <input type="range" name="support_sensitive" min="-2" max="2" oninput="updateSlider(this.name, this.value)" class="slider">
-                        <span>Insensitive</span>
-                    </div>
-                    <div class="slider-container">
-                        <span>Caring</span>
-                        <input type="range" name="support_caring" min="-2" max="2" oninput="updateSlider(this.name, this.value)" class="slider">
-                        <span>Uncaring</span>
-                    </div>
-                    <div class="slider-container">
-                        <span>Understanding</span>
-                        <input type="range" name="support_understanding" min="-2" max="2" oninput="updateSlider(this.name, this.value)" class="slider">
-                        <span>Not Understanding</span>
-                    </div>
-                    <div class="slider-container">
-                        <span>Supportive</span>
-                        <input type="range" name="support_supportive" min="-2" max="2" oninput="updateSlider(this.name, this.value)" class="slider">
-                        <span>Unsupportive</span>
-                    </div>
+                    <h5>Q3. Deep Acting</h5>
+
+                    <h6>I try to actually experience the emotions that I must show to customers:</h6>
+                    <label class="radio"><input type="radio" name="deep_experience" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="deep_experience" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="deep_experience" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="deep_experience" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="deep_experience" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="deep_experience" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="deep_experience" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>I make an effort to actually feel the emotions that I need to display toward others:</h6>
+                    <label class="radio"><input type="radio" name="deep_effort" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="deep_effort" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="deep_effort" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="deep_effort" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="deep_effort" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="deep_effort" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="deep_effort" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>I work hard to feel the emotions that I need to show to customers:</h6>
+                    <label class="radio"><input type="radio" name="deep_work" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="deep_work" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="deep_work" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="deep_work" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="deep_work" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="deep_work" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="deep_work" value="7"> Strongly agree</label>
                 </div>
             </div>
-            
-            <button class="button is-success" type="submit">Submit Survey and Start Next Chat</button>
+
+            <!-- 4. Expression of Naturally Felt Emotions -->
+            <div class="block survey-section">
+                <div class="control content">
+                    <h5>Q4. Expression of Naturally Felt Emotions</h5>
+
+                    <h6>The emotions I express to customers are genuine:</h6>
+                    <label class="radio"><input type="radio" name="genuine_emotions" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="genuine_emotions" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="genuine_emotions" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="genuine_emotions" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="genuine_emotions" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="genuine_emotions" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="genuine_emotions" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>The emotions I show customers come naturally:</h6>
+                    <label class="radio"><input type="radio" name="natural_emotions" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="natural_emotions" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="natural_emotions" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="natural_emotions" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="natural_emotions" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="natural_emotions" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="natural_emotions" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>The emotions I show customers match what I spontaneously feel:</h6>
+                    <label class="radio"><input type="radio" name="match_emotions" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="match_emotions" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="match_emotions" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="match_emotions" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="match_emotions" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="match_emotions" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="match_emotions" value="7"> Strongly agree</label>
+                </div>
+            </div>
+
+            </div>
+
+            <!-- ===== PAGE 3: Q5, Q6, Q7 ===== -->
+            <div class="survey-page" data-page="3">
+
+            <!-- 5. Client-Related Burnout -->
+            <div class="block survey-section">
+                <div class="control content">
+                    <h5>Q5. Client-Related Burnout</h5>
+
+                    <h6>Do you find it frustrating to work with clients?</h6>
+                    <label class="radio"><input type="radio" name="burnout_frustrating" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_frustrating" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_frustrating" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_frustrating" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_frustrating" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="burnout_frustrating" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="burnout_frustrating" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>Does it drain your energy to work with clients?</h6>
+                    <label class="radio"><input type="radio" name="burnout_drain" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_drain" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_drain" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_drain" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_drain" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="burnout_drain" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="burnout_drain" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>Are you tired of working with clients?</h6>
+                    <label class="radio"><input type="radio" name="burnout_tired" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_tired" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_tired" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_tired" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="burnout_tired" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="burnout_tired" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="burnout_tired" value="7"> Strongly agree</label>
+                </div>
+            </div>
+
+            <!-- 6. Job Satisfaction -->
+            <div class="block survey-section">
+                <div class="control content">
+                    <h5>Q6. Job Satisfaction</h5>
+
+                    <h6>Generally speaking, I am very satisfied with this job:</h6>
+                    <label class="radio"><input type="radio" name="job_satisfaction" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="job_satisfaction" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="job_satisfaction" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="job_satisfaction" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="job_satisfaction" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="job_satisfaction" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="job_satisfaction" value="7"> Strongly agree</label>
+                </div>
+            </div>
+
+            <!-- 7. Recovery -->
+            <div class="block survey-section">
+                <div class="control content">
+                    <h5>Q7. Recovery</h5>
+
+                    <h6>I feel recovered:</h6>
+                    <label class="radio"><input type="radio" name="recovery" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="recovery" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="recovery" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="recovery" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="recovery" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="recovery" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="recovery" value="7"> Strongly agree</label>
+                </div>
+            </div>
+
+            </div>
+
+            <!-- ===== PAGE 4: Q8, Q9, Q10 ===== -->
+            <div class="survey-page" data-page="4">
+
+            <!-- 8. Perceived Usefulness -->
+            <div class="block survey-section">
+                <div class="control content">
+                    <h5>Q8. Perceived Usefulness</h5>
+
+                    <h6>Using AI assistants would enable me to accomplish tasks more quickly:</h6>
+                    <label class="radio"><input type="radio" name="useful_quickly" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="useful_quickly" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="useful_quickly" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="useful_quickly" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="useful_quickly" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="useful_quickly" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="useful_quickly" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>Using AI assistants would improve my performance at accomplishing tasks:</h6>
+                    <label class="radio"><input type="radio" name="useful_performance" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="useful_performance" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="useful_performance" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="useful_performance" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="useful_performance" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="useful_performance" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="useful_performance" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>I find AI assistants useful for me to accomplish tasks:</h6>
+                    <label class="radio"><input type="radio" name="useful_find" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="useful_find" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="useful_find" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="useful_find" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="useful_find" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="useful_find" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="useful_find" value="7"> Strongly agree</label>
+                </div>
+            </div>
+
+            <!-- 9. Trust in AI -->
+            <div class="block survey-section">
+                <div class="control content">
+                    <h5>Q9. Trust in AI</h5>
+
+                    <h6>I trusted the AI assistant's guidance:</h6>
+                    <label class="radio"><input type="radio" name="trust_guidance" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="trust_guidance" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="trust_guidance" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="trust_guidance" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="trust_guidance" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="trust_guidance" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="trust_guidance" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>I would rely on this AI assistant again:</h6>
+                    <label class="radio"><input type="radio" name="trust_rely" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="trust_rely" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="trust_rely" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="trust_rely" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="trust_rely" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="trust_rely" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="trust_rely" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>The AI assistant seemed dependable:</h6>
+                    <label class="radio"><input type="radio" name="trust_dependable" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="trust_dependable" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="trust_dependable" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="trust_dependable" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="trust_dependable" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="trust_dependable" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="trust_dependable" value="7"> Strongly agree</label>
+                </div>
+            </div>
+
+            <!-- 10. AI Literacy - Evaluation -->
+            <div class="block survey-section">
+                <div class="control content">
+                    <h5>Q10. AI Literacy - Evaluation</h5>
+
+                    <h6>I can evaluate the capabilities and limitations of an AI assistant or product after using it for a while:</h6>
+                    <label class="radio"><input type="radio" name="literacy_evaluate" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_evaluate" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_evaluate" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_evaluate" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_evaluate" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="literacy_evaluate" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="literacy_evaluate" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>I can choose a proper solution from the various solutions provided by an AI assistant:</h6>
+                    <label class="radio"><input type="radio" name="literacy_choose_solution" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_solution" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_solution" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_solution" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_solution" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_solution" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_solution" value="7"> Strongly agree</label>
+                </div>
+
+                <div class="control content">
+                    <h6>I can choose the most appropriate AI assistant or product from a variety for a particular task:</h6>
+                    <label class="radio"><input type="radio" name="literacy_choose_assistant" value="1"> Strongly disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_assistant" value="2"> Disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_assistant" value="3"> Somewhat disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_assistant" value="4"> Neither agree nor disagree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_assistant" value="5"> Somewhat agree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_assistant" value="6"> Agree</label>
+                    <label class="radio"><input type="radio" name="literacy_choose_assistant" value="7"> Strongly agree</label>
+                </div>
+            </div>
+
+            </div>
+
+            </div>
+            <footer class="modal-card-foot">
+                <span class="page-indicator" id="pageIndicator">Page 1 of 4</span>
+                <button class="button is-link" type="button" id="nextBtn" onclick="changeSurveyPage(1)">Next</button>
+                <button class="button is-success" type="submit" id="completeButton" style="display:none;">Submit Survey</button>
+            </footer>
         </div>
     </div>
 </form>

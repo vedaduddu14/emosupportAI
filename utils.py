@@ -15,16 +15,13 @@ from langchain.tools.retriever import create_retriever_tool
 
 class mOpenAI:
     """
-    Already setup key and endpoint as environmental variables through bash.
-    These can be found on Azure. Currently testing instance `vds-openai-test-001`.
+    OpenAI client configured with API key from environment variables.
     """
     def __init__(self):
-        self.client = oai.AzureOpenAI(
-            api_key=os.getenv("AZURE_OPENAI_KEY"),
-            api_version="2023-12-01-preview",
-            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+        self.client = oai.OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY")
         )
-        self.deployment_name = 'TEST'  # This will correspond to the custom name you chose for your deployment when you deployed a model. Use a gpt-35-turbo-instruct deployment.
+        self.deployment_name = 'gpt-3.5-turbo-instruct'  # Standard OpenAI model
 
     def demo(self, start_phrase='Write a tagline for an ice cream shop for orcs.', token_lim=15):
         # Send a completion call to generate an answer
@@ -34,25 +31,18 @@ class mOpenAI:
 
 class mLangChain:
     def __init__(self,mlimit=100):
-        self.client_completion = lcai.AzureOpenAI(
-            openai_api_key=os.getenv("AZURE_OPENAI_KEY"),
-            openai_api_version="2024-02-15-preview",
-            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-            deployment_name="TEST",
-            model_name="gpt-3.5-turbo-instruct",
+        self.client_completion = lcai.OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            model="gpt-3.5-turbo-instruct"
         )
-        self.client_agent = lcai.AzureChatOpenAI(
-            openai_api_key=os.getenv("AZURE_OPENAI_KEY"),
-            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-            azure_deployment="NUHAI-GPT4",
-            openai_api_version="2024-02-15-preview",
-            model_name="gpt-4",
+        self.client_agent = lcai.ChatOpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            model="gpt-5-nano",
+            temperature=1
         )
-        self.embeddings = lcai.AzureOpenAIEmbeddings(
-            openai_api_key=os.getenv("AZURE_OPENAI_KEY"),
-            openai_api_version="2024-02-15-preview",
-            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-            deployment="TEST-Embedding",
+        self.embeddings = lcai.OpenAIEmbeddings(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            model="text-embedding-3-small"
         )
         self.qa_prompt = ChatPromptTemplate.from_messages([
             ("system", "Your vocabulary is limited to a 5 year old american."),

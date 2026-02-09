@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Study Completion</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_chat.css') }}">
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 100px;
+        }
+        .notification {
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="notification is-warning">
+        <h1 class="title is-4">Study Completion</h1>
+        <div class="content">
+            <p>Thank you for your participation. Unfortunately, you did not meet the attention check criteria for this study.</p>
+
+            <p>Please return to Prolific using the completion code below:</p>
+
+            <div class="box has-text-centered">
+                <p class="is-size-5 has-text-weight-bold">Completion Code:</p>
+                <p class="is-size-3 has-text-primary has-text-weight-bold" style="letter-spacing: 2px;">
+                    PLACEHOLDER_CODE
+                </p>
+            </div>
+
+            <p class="has-text-grey">
+                <em>Note: This completion code will be replaced with the actual Prolific completion code.</em>
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

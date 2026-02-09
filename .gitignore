@@ -1,6 +1,18 @@
 data/
 .csv
+.DS_Store
 .DS_store
+
+# Study data (don't push participant data)
+study_data/
+study_data_testing/
+participant_counts.json
+
+# Environment/secrets
+project.env
+
+# Flask sessions
+flask_session/
 
 output/*.csv
 

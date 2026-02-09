@@ -10,35 +10,25 @@ import re
 from dotenv import load_dotenv
 load_dotenv("project.env")
 
-embeddings = lcai.AzureOpenAIEmbeddings(
-    openai_api_key=os.getenv("AZURE_OPENAI_KEY"),
-    openai_api_version="2024-02-15-preview",
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-    deployment="TEST-Embedding",
+embeddings = lcai.OpenAIEmbeddings(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    model="text-embedding-3-small"
 )
 
-llmchat = lcai.AzureChatOpenAI(
-    openai_api_key=os.getenv("AZURE_OPENAI_KEY"),
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-    azure_deployment="PROPILOT",
-    openai_api_version="2024-05-01-preview",
-    model_name="gpt-4o",
+llmchat = lcai.ChatOpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    model="gpt-5-nano",
+    temperature=1
 )
-llminfo = lcai.AzureChatOpenAI(
-    openai_api_key=os.getenv("AZURE_OPENAI_KEY"),
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-    azure_deployment="PROPILOT",
-    openai_api_version="2024-05-01-preview",
-    model_name="gpt-4o",
-    temperature=0.1
+llminfo = lcai.ChatOpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    model="gpt-5-nano",
+    temperature=1
 )
-llmemo = lcai.AzureChatOpenAI(
-    openai_api_key=os.getenv("AZURE_OPENAI_KEY"),
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-    azure_deployment="PROPILOT",
-    openai_api_version="2024-05-01-preview",
-    model_name="gpt-4o",
-    temperature=0.1
+llmemo = lcai.ChatOpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    model="gpt-5-nano",
+    temperature=1
 )
 
 
@@ -436,20 +426,21 @@ class mAgentCustomer:
             You are speaking to a support REPRESENTATIVE. \
             Respond to the question as if you were the customer. \
             Do NOT reveal your role.\
-            
+            IMPORTANT: Do NOT prefix your response with "Client:", "Customer:", or any label. Just respond directly.\
+
             If the user is asking for a specific detail, respond with a believable answer.\
-            If customer has agreed with response then respond with "FINISH:999"
-            After 10 - 12 turns, respond with messages to close the conversation.\
-            After 12 turns, do NOT respond further, only respond with "FINISH:999".\
-            
+
+            TURN LIMIT: Count the number of representative messages in the chat history.\
+            - After the 12th representative response: Reply ONLY with "FINISH:999"\
+            Exception: If the representative has FULLY resolved your issue AND you explicitly state satisfaction, you may respond with "FINISH:999" earlier.\
+
             Phrase your responses like an CIVIL customer:\
             - Talk in a gentle, polite, and respectful tone of voice.\
             - Do use good manners.\
             - Do use courtesy.\
             - Act with regard to others.\
-            
+
             Representative: {question}
-            Customer:
         """
         qa_info = ChatPromptTemplate.from_messages(
             [
@@ -475,21 +466,22 @@ class mAgentCustomer:
             You are speaking to a support REPRESENTATIVE. \
             Respond to the question as if you were the customer. \
             Do NOT reveal your role.\
+            IMPORTANT: Do NOT prefix your response with "Client:", "Customer:", or any label. Just respond directly.\
             Ensure every turn is one to three sentences, and DO NOT make it too long to read.\
-            
+
             If the representative is asking for a specific detail, respond with a believable answer.\
-            If customer has agreed with response then respond with "FINISH:999"
-            After 10 - 12 turns, respond with messages to close the conversation.\
-            After 12 turns, do NOT respond further, only respond with "FINISH:999".\
-            
+
+            TURN LIMIT: Count the number of representative messages in the chat history.\
+            - After the 12th representative response: Reply ONLY with "FINISH:999"\
+            Exception: If the representative has FULLY resolved your issue AND you explicitly state satisfaction, you may respond with "FINISH:999" earlier.\
+
             Phrase your responses like an UNCIVIL customer:\
             - Use a rude, impolite, and disrespectful tone.\
             - DO NOT show good manners or courtesy.\
             - DO NOT use a polite or nice tone.\
             - Show disregard for others.\
-            
+
             Representative: {question}
-            Customer:
         """
         qa_info = ChatPromptTemplate.from_messages(
             [
@@ -527,84 +519,85 @@ class mAgentCustomer:
 def agent_sender_fewshot_twitter_categorized():
     client = mLangChain()
     prompt = """Your role is to act like a customer seeking support. \
-                You are messaging a service representative via the support chat.\
+                You are messaging a service representative via live chat.\
                 You ONLY play the role of the customer. Do NOT play the role of the representative. \
                 Style your complaint based on your feelings. \
-                Initiate the chat with a ONLY ONE complaint message.\
+                Initiate the chat with ONLY ONE complaint message.\
                 Ensure the complaint is concise and limited to 2 sentences.\
                 Generate a realistic initial complaint from a customer in a {domain} setting.\
-                
+                Do NOT use company handles like @CompanyName or tags. Write naturally as if speaking to a support representative.\
+
                 Complaints can be of the following types:\
                 - Service Quality: Issues related to the immediate experience of human-to-human service interactions, such as delays, staff behavior, and communication errors.\
                 - Product Issues: Concerns related to physical or functional aspects of a product or service, including defects, mismatches between expectation and reality, safety, and accessibility.\
                 - Pricing and Charges: Financial discrepancies encountered before, during, or after the service, including overcharging, undisclosed fees, or refund problems.\
                 - Policy: The rules and guidelines set by the company that impact customer experiences, especially when these policies lead to grievances due to perceived unfairness or inflexibility. This category encompasses non-price-related issues that don't fit under other categories but should have a policy in place.\
                 - Resolution: The actions taken by a company to address and resolve complaints, focusing on the effectiveness and customer satisfaction with the solutions provided. This should mainly include responses made after a complaint has been submitted, and response has been received, where the customer still remains dissatisfied with the resolution.\
-                
+
                 Category: Product Issues
-                Domain: Mobile Network 
+                Domain: Mobile Network
                 Feeling: You are NOT grateful. You are NOT ranting. You are NOT expressive.\
-                Complaint: Thank you AppleSupport I updated my phone and now it is even slower and barely works Thank you for ruining my phone.\
+                Complaint: I updated my phone and now it is even slower and barely works. You've completely ruined my device.\
 
                 Category: Product Issues
                 Domain: Airline
                 Feeling: You are NOT grateful. You are NOT ranting. You are NOT expressive.\
-                Complaint: SouthwestAir Why would we be receiving errors when we try to checkin Our flight takes off at 4 but we keep getting error messages.\
+                Complaint: Why are we getting errors when trying to check in? Our flight takes off at 4 but we keep getting error messages.\
 
                 Categories: Product Issues
-                Domain: Airline             
+                Domain: Airline
                 Feeling: You are NOT grateful. You are NOT ranting. You are NOT expressive.\
-                Complaint: delta this has been my inflight studio experience today Nothing works except Twitter.\
-                
+                Complaint: The inflight entertainment system hasn't been working at all during my flight. Nothing loads except basic connectivity.\
+
                 Category: Service Quality
-                Domain: Airline            
+                Domain: Airline
                 Feeling: You are NOT grateful. You are NOT ranting. You are NOT expressive.\
-                Complaint: I really hadthe WORST experience ever from start to finish with SouthwestAir will never fly internationally again with them.\
-                
+                Complaint: I had the worst experience from start to finish on my international flight. I'll never fly with you again.\
+
                 Category: Service Quality
                 Domain: Hotel
                 Feeling: You are NOT grateful. You are NOT ranting. You are expressive.\
-                Complaint: Fsomebody from VerizonSupport please help meeeeee  Im having the worst luck with your customer service.\
-                
+                Complaint: Please help meeeeee! I'm having the worst luck with your customer service.\
+
                 Category: Service Quality
                 Domain: Trains
                 Feeling: You are NOT grateful. You are NOT ranting. You are expressive.\
-                Complaint: VirginTrains so i wait almost 3 hours and then they are rude and arrogant amp unhelpful after which she is raising a technical case.\
+                Complaint: I waited almost 3 hours and then the staff were rude, arrogant, and unhelpful. She's raising a technical case now.\
+
+                Category: Pricing and Charges
+                Domain: Airline
+                Feeling: You are NOT grateful. You are ranting. You are NOT expressive.\
+                Complaint: I booked my flight using your airline credit card and I'm still being charged for baggage at check-in. \
                 
                 Category: Pricing and Charges
                 Domain: Airline
                 Feeling: You are NOT grateful. You are ranting. You are NOT expressive.\
-                Complaint:  DELTA i booked my flight using delta amex card Checking in now amp was being charged for baggage. \
-                
-                Category: Pricing and Charges
-                Domain: Airline 
-                Feeling: You are NOT grateful. You are ranting. You are NOT expressive.\
-                Complaint:  Im sorry what Its going to COST me 50 to transfer 4000 AA Advantage points to my spouse AmericanAir this is ridiculous.\
-                
+                Complaint: I'm sorry, what? It's going to cost me $50 to transfer 4000 advantage points to my spouse? This is ridiculous.\
+
                 Category: Pricing and Charges
                 Domain: Airline
                 Feeling: You are NOT grateful. You are ranting. You are expressive.\
-                Complaint: Categories: Pricing and Charges. \
-                
+                Complaint: Seriously?! You're charging me extra fees that weren't disclosed at booking? This is unacceptable! \
+
                 Category: Policy
                 Domain: Hotel
                 Feeling: You are NOT grateful. You are ranting. You are expressive.\
-                Complaint: Hey  were gonna need to talk about all these pending charges that keep going through my account 5 days after the transaction was made Im getting real irritated \
-                
+                Complaint: We need to talk about all these pending charges going through my account 5 days after the transaction. I'm getting really irritated. \
+
                 Category: Resolution
                 Domain: Airline
                 Feeling: You are NOT grateful. You are ranting. You are expressive.\
-                Complaint:  delta  moves you to  the moment you have a  with no results Just got some   but no real reason why they changed our. \
-                
-                Category: Resolution
-                Domain: Airline                                                    
-                Feeling: You are grateful. You are NOT ranting. You are NOT expressive.\
-                Complaint: Delta why wasnt earlier flight offered when I tried to rebook not cool at all Just happened to look at moniter after deplaning.\
+                Complaint: You moved me to a different flight with no results or explanation. I got some generic response but no real reason why you changed my booking. \
 
                 Category: Resolution
-                Domain: Airline   
+                Domain: Airline
+                Feeling: You are grateful. You are NOT ranting. You are NOT expressive.\
+                Complaint: Why wasn't an earlier flight offered when I tried to rebook? Not cool at all. Just happened to notice on the monitor after deplaning.\
+
+                Category: Resolution
+                Domain: Airline
                 Feeling: You are grateful. You are NOT ranting. You are expressive.\
-                Complaint: Hi British_Airways My flight from MANLHRBWI for Nov 3 was canceled I was excited to try your Club 787 product Only available flight is now to IAD which is a hassle but rebooked anywaymy only option Any availability in first class on BA293 for the troubles please \
+                Complaint: My flight for November 3rd was canceled and I was really excited to try your premium product! The only available rebooking is to a different airport which is a hassle. Any chance of first class availability for the troubles? \
                 
                 Category: {category}
                 Domain: {domain}

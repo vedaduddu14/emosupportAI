@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post-Round 1 Survey</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_chat.css') }}">
+    <style>
+        /* Full screen survey modal - Override Bulma defaults */
+        #post-round1-modal .modal-card {
+            width: 95vw !important;
+            max-width: 1200px !important;
+            max-height: 95vh !important;
+            margin: auto !important;
+        }
+        #post-round1-modal .modal-content {
+            max-height: calc(95vh - 120px) !important;
+            overflow-y: auto !important;
+            padding: 2rem !important;
+            background-color: white !important;
+            border-radius: 6px !important;
+            width: 100% !important;
+        }
+        #post-round1-modal .modal-card-head {
+            flex-shrink: 0 !important;
+        }
+        #post-round1-modal .modal-card-foot {
+            flex-shrink: 0 !important;
+            justify-content: space-between !important;
+        }
+        .survey-page { display: none; }
+        .survey-page.active { display: block; }
+        .page-indicator {
+            font-size: 0.9rem;
+            color: #888;
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="modal is-active" id="post-round1-modal">
+    <form id="postRound1Form">
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Round 1 Complete - Brief Survey</p>
+            </header>
+            <div class="modal-content">
+
+                <div class="block is-size-5">
+                    Please answer the following questions about your experience in Round 1:
+                </div>
+
+                <!-- ===== PAGE 1: Q1, Q2, Q3 ===== -->
+                <div class="survey-page active" data-page="1">
+
+                    <!-- Attention Check -->
+                    <div class="block survey-section">
+                        <div class="control content">
+                            <h5>1. When dealing with uncivilized customers, have you gotten help from any of the following AI assistants?</h5>
+                            <label class="radio"><input type="radio" name="attention_check" value="information"> Information Assistant</label>
+                            <label class="radio"><input type="radio" name="attention_check" value="emotional"> Emotional Assistant</label>
+                            <label class="radio"><input type="radio" name="attention_check" value="both"> Both Information and Emotional Assistant</label>
+                            <label class="radio"><input type="radio" name="attention_check" value="none"> None</label>
+                        </div>
+                    </div>
+
+                    <!-- Actionality Check -->
+                    <div class="block survey-section">
+                        <div class="control content">
+                            <h5>2. The system helped me understand the next steps.</h5>
+                            <label class="radio"><input type="radio" name="actionality" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="actionality" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="actionality" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="actionality" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="actionality" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="actionality" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="actionality" value="7"> 7 Extremely agree</label>
+                        </div>
+                    </div>
+
+                    <!-- Reframe Check -->
+                    <div class="block survey-section">
+                        <div class="control content">
+                            <h5>3. The system helped me view the situation from a different perspective.</h5>
+                            <label class="radio"><input type="radio" name="reframe" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="reframe" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="reframe" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="reframe" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="reframe" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="reframe" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="reframe" value="7"> 7 Extremely agree</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ===== PAGE 2: Q4, Q5 ===== -->
+                <div class="survey-page" data-page="2">
+
+                    <!-- Affect (now) -->
+                    <div class="block survey-section">
+                        <div class="control content">
+                            <h5>4. How do you feel right now?</h5>
+
+                            <h6>Right now I feel calm.</h6>
+                            <label class="radio"><input type="radio" name="affect_calm" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="affect_calm" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="affect_calm" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="affect_calm" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="affect_calm" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="affect_calm" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="affect_calm" value="7"> 7 Extremely agree</label>
+                        </div>
+
+                        <div class="control content">
+                            <h6>Right now I feel in control.</h6>
+                            <label class="radio"><input type="radio" name="affect_control" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="affect_control" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="affect_control" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="affect_control" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="affect_control" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="affect_control" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="affect_control" value="7"> 7 Extremely agree</label>
+                        </div>
+
+                        <div class="control content">
+                            <h6>Right now I feel motivated.</h6>
+                            <label class="radio"><input type="radio" name="affect_motivated" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="affect_motivated" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="affect_motivated" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="affect_motivated" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="affect_motivated" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="affect_motivated" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="affect_motivated" value="7"> 7 Extremely agree</label>
+                        </div>
+
+                        <div class="control content">
+                            <h6>Right now I feel stressed.</h6>
+                            <label class="radio"><input type="radio" name="affect_stressed" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="affect_stressed" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="affect_stressed" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="affect_stressed" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="affect_stressed" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="affect_stressed" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="affect_stressed" value="7"> 7 Extremely agree</label>
+                        </div>
+
+                        <div class="control content">
+                            <h6>Right now I feel frustrated.</h6>
+                            <label class="radio"><input type="radio" name="affect_frustrated" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="affect_frustrated" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="affect_frustrated" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="affect_frustrated" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="affect_frustrated" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="affect_frustrated" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="affect_frustrated" value="7"> 7 Extremely agree</label>
+                        </div>
+
+                        <div class="control content">
+                            <h6>Right now I feel angry.</h6>
+                            <label class="radio"><input type="radio" name="affect_angry" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="affect_angry" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="affect_angry" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="affect_angry" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="affect_angry" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="affect_angry" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="affect_angry" value="7"> 7 Extremely agree</label>
+                        </div>
+                    </div>
+
+                    <!-- Self-efficacy -->
+                    <div class="block survey-section">
+                        <div class="control content">
+                            <h5>5. Self-Efficacy</h5>
+
+                            <h6>I feel confident that I could handle a similar customer.</h6>
+                            <label class="radio"><input type="radio" name="efficacy_confident" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="efficacy_confident" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="efficacy_confident" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="efficacy_confident" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="efficacy_confident" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="efficacy_confident" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="efficacy_confident" value="7"> 7 Extremely agree</label>
+                        </div>
+
+                        <div class="control content">
+                            <h6>I can remain effective even if the customer is rude.</h6>
+                            <label class="radio"><input type="radio" name="efficacy_rude" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="efficacy_rude" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="efficacy_rude" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="efficacy_rude" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="efficacy_rude" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="efficacy_rude" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="efficacy_rude" value="7"> 7 Extremely agree</label>
+                        </div>
+
+                        <div class="control content">
+                            <h6>I can de-escalate difficult customer interactions.</h6>
+                            <label class="radio"><input type="radio" name="efficacy_deescalate" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="efficacy_deescalate" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="efficacy_deescalate" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="efficacy_deescalate" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="efficacy_deescalate" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="efficacy_deescalate" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="efficacy_deescalate" value="7"> 7 Extremely agree</label>
+                        </div>
+
+                        <div class="control content">
+                            <h6>I can think clearly when a customer is uncivil.</h6>
+                            <label class="radio"><input type="radio" name="efficacy_think" value="1"> 1 Extremely disagree</label>
+                            <label class="radio"><input type="radio" name="efficacy_think" value="2"> 2</label>
+                            <label class="radio"><input type="radio" name="efficacy_think" value="3"> 3</label>
+                            <label class="radio"><input type="radio" name="efficacy_think" value="4"> 4</label>
+                            <label class="radio"><input type="radio" name="efficacy_think" value="5"> 5</label>
+                            <label class="radio"><input type="radio" name="efficacy_think" value="6"> 6</label>
+                            <label class="radio"><input type="radio" name="efficacy_think" value="7"> 7 Extremely agree</label>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <footer class="modal-card-foot">
+                <span class="page-indicator" id="pageIndicator">Page 1 of 2</span>
+                <button class="button is-link" type="button" id="nextBtn" onclick="changePage(1)">Next</button>
+                <button class="button is-success" type="submit" id="submitBtn" style="display:none;">Continue to Round 2</button>
+            </footer>
+        </div>
+    </form>
+</div>
+
+<script>
+const TOTAL_PAGES = 2;
+let currentPage = 1;
+
+// Questions required on each page
+const pageRequiredKeys = {
+    1: ["attention_check", "actionality", "reframe"],
+    2: ["affect_calm", "affect_control", "affect_motivated", "affect_stressed", "affect_frustrated", "affect_angry",
+        "efficacy_confident", "efficacy_rude", "efficacy_deescalate", "efficacy_think"]
+};
+
+function changePage(direction) {
+    // Validate current page before moving forward
+    if (direction === 1) {
+        const formData = new FormData(document.getElementById('postRound1Form'));
+        const formValues = {};
+        formData.forEach((value, key) => { formValues[key] = value; });
+
+        const requiredKeys = pageRequiredKeys[currentPage];
+        const allAnswered = requiredKeys.every(key => Object.keys(formValues).includes(key));
+        if (!allAnswered) {
+            alert("Please respond to all questions on this page.");
+            return;
+        }
+    }
+
+    // Hide current page, show next
+    document.querySelector(`.survey-page[data-page="${currentPage}"]`).classList.remove('active');
+    currentPage += direction;
+    document.querySelector(`.survey-page[data-page="${currentPage}"]`).classList.add('active');
+
+    // Scroll modal content to top
+    document.querySelector('.modal-content').scrollTop = 0;
+
+    // Update buttons (no back button - participants cannot go backwards)
+    document.getElementById('nextBtn').style.display = currentPage < TOTAL_PAGES ? '' : 'none';
+    document.getElementById('submitBtn').style.display = currentPage === TOTAL_PAGES ? '' : 'none';
+    document.getElementById('pageIndicator').textContent = `Page ${currentPage} of ${TOTAL_PAGES}`;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('postRound1Form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const formValues = {};
+        formData.forEach((value, key) => { formValues[key] = value; });
+
+        // Validate last page
+        const requiredKeys = pageRequiredKeys[TOTAL_PAGES];
+        const allAnswered = requiredKeys.every(key => Object.keys(formValues).includes(key));
+        if (!allAnswered) {
+            alert("Please respond to all questions on this page.");
+            return;
+        }
+
+        // ATTENTION CHECK: Round 1 should have NO agents
+        if (formValues.attention_check !== 'none') {
+            console.log('[ATTENTION CHECK FAILED] Selected:', formValues.attention_check, 'Expected: none');
+            const sessionId = window.location.pathname.split('/')[2];
+            window.location.href = `/attention-check-failed/${sessionId}/`;
+            return;
+        }
+
+        const sessionId = window.location.pathname.split('/')[2];
+
+        fetch(`/store-post-round1-survey/${sessionId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formValues)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            alert('Survey submitted successfully!');
+            window.location.href = response.url;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Error submitting survey');
+        });
+    });
+});
+</script>
+
+</body>
+</html>

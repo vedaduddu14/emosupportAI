@@ -336,16 +336,21 @@ pre {
   margin: 16px 0px 16px 0px;
   align-items: center;
   width: 100%;
+  gap: 4px;
 }
 
 .slider-container span {
-    width: 8em;
+    width: auto;
+    white-space: nowrap;
+    font-size: 0.85em;
 }
 
 
 .slider {
   -webkit-appearance: none;
-  width: 24em;
+  flex: 1;
+  min-width: 100px;
+  max-width: 100%;
   height: 8px;
   background: #d3d3d3;
   opacity: 0.7;
@@ -366,4 +371,61 @@ pre {
 
 .radio input {
     display: block;
+}
+
+/* Agent Panel Hover Effects - Subtle Highlight */
+#troubleWindow, #supportWindow {
+    transition: all 0.3s ease;
+}
+
+#troubleWindow:hover, #supportWindow:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+    background-color: rgba(0, 123, 255, 0.02);
+    border-radius: 8px;
+}
+
+/* Smooth transitions for agent cards */
+#troubleWindow .message, #supportWindow .message {
+    transition: all 0.2s ease;
+}
+
+#troubleWindow:hover .message, #supportWindow:hover .message {
+    border-color: rgba(0, 123, 255, 0.4);
+}
+
+/* Compact Agent Panels - Prevent Scrolling */
+#troubleWindow .card, #supportWindow .card {
+    margin-bottom: 8px !important;
+    font-size: 0.9em;
+}
+
+#troubleWindow .card-header, #supportWindow .card-header {
+    padding: 0.5rem 0.75rem;
+    min-height: auto;
+}
+
+#troubleWindow .card-header-title, #supportWindow .card-header-title {
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+#troubleWindow .card-content, #supportWindow .card-content {
+    padding: 0.75rem;
+    font-size: 0.85em;
+    line-height: 1.3;
+}
+
+#troubleWindow .message-body, #supportWindow .message-body {
+    padding: 0.75rem;
+    font-size: 0.85em;
+    line-height: 1.3;
+}
+
+#troubleWindow .slider-container, #supportWindow .slider-container {
+    margin: 8px 0px;
+}
+
+#troubleWindow .card-footer, #supportWindow .card-footer {
+    padding: 0.5rem;
 }

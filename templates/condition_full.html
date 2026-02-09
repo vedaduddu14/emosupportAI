@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Study Slot Unavailable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.1/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_chat.css') }}">
+</head>
+
+<body>
+<section class="hero is-white is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <div class="box" style="max-width: 600px; margin: 0 auto;">
+                <h2 class="title is-3">
+                    Study Slot Unavailable
+                </h2>
+                <div class="content" style="text-align: left;">
+                    <p>Thank you for your interest in participating in our research study and for completing the initial questionnaire!</p>
+
+                    <p>Unfortunately, the study slot you were assigned to has reached capacity for participants with your profile. We appreciate you taking the time to answer our questions.</p>
+
+                    <p><strong>What this means:</strong></p>
+                    <ul>
+                        <li>Your survey responses have been recorded</li>
+                        <li>The specific study condition you were assigned to is now full</li>
+                        <li>You will not be able to continue with the main study tasks</li>
+                    </ul>
+
+                    <p><strong>Compensation:</strong></p>
+                    <p>Please use the link below to receive partial compensation for your time completing the questionnaire:</p>
+
+                    <!-- TODO: Replace with actual Prolific redirect URL -->
+                    <div class="notification is-warning">
+                        <p><strong>Temporary Placeholder</strong></p>
+                        <p>The Prolific completion link will be added here once available.</p>
+                        <p>Session ID: {{ session_id }}</p>
+                    </div>
+
+                    <p><strong>Future Opportunities:</strong></p>
+                    <p>If you would like to be notified about future research opportunities, please contact:</p>
+                    <p>
+                        <strong>Dr. Haylee Min</strong><br>
+                        Email: <a href="mailto:hanyimin@illinois.edu">hanyimin@illinois.edu</a>
+                    </p>
+
+                    <p class="mt-5">Thank you again for your interest and understanding!</p>
+                </div>
+
+                <div class="mt-5">
+                    <figure class="image" style="max-width: 200px; margin: 0 auto;">
+                        <img src="{{url_for('static', filename='uiuc-logo.png')}}" alt="University of Illinois Urbana-Champaign">
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
