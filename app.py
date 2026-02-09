@@ -1175,7 +1175,7 @@ def getClientList(session_id):
     return jsonify({"chat_history": chat_history, "clients_info": clients_info})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, threaded=True)
+    app.run(host="0.0.0.0", port=8443, threaded=True)
 #%%
 
 
