@@ -475,12 +475,12 @@ def storePreSurvey(session_id):
         # Now that we know the participant's suppressor type, find conditions
         # that still have space for this type and randomly pick one.
         # TESTING: Force specific condition (uncomment one):
-        assigned_condition = "no_agents"
+        # assigned_condition = "no_agents"
         # assigned_condition = "emo_only"
         # assigned_condition = "info_only"
         # assigned_condition = "both_agents"
-        # PRODUCTION: Uncomment below and comment out the forced assignment above:
-        # assigned_condition = assign_condition(emotion_regulation_type)
+        # PRODUCTION:
+        assigned_condition = assign_condition(emotion_regulation_type)
 
         if assigned_condition is None:
             # No conditions have space for this suppressor type - redirect out
