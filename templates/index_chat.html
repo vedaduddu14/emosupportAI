@@ -42,15 +42,14 @@
                 <span class="tag is-info is-medium">Round {{ current_round }}</span>
             </div>
 
+            <!-- Debug buttons hidden for study -->
+            <!--
             <div class="buttons has-addons" style="padding: 0.5em;">
-                <!-- button link to next client-->
                 <button class="button is-danger is-dark" onclick="confirmNextClient('{{ session_id }}')">
              <span class="icon">
                 <i class="fas fa-dog"></i>
              </span>
                 </button>
-
-                <!-- button link to survey -->
 
                 <button class="button is-warning is-dark" onclick="showSurveyModal()">
             <span class="icon">
@@ -58,19 +57,19 @@
             </span>
                 </button>
 
-                <!-- button link to conversation history -->
                 <button class="button is-light" onclick="goToHistoryPage('{{ session_id }}')">
             <span class="icon">
                 <i class="fas fa-otter"></i>
             </span>
                 </button>
             </div>
+            -->
 
 
             <div>
                 <div style="margin-left: 5%;">
                     <p> 
-                        <strong>Queue</strong>
+                        <strong>Upcoming Client</strong>
                     </p>
                 </div>
             </div>

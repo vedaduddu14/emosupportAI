@@ -431,7 +431,7 @@ class mAgentCustomer:
             If the user is asking for a specific detail, respond with a believable answer.\
 
             TURN LIMIT: Count the number of representative messages in the chat history.\
-            - After the 12th representative response: Reply ONLY with "FINISH:999"\
+            - After the 6th representative response: Reply ONLY with "FINISH:999"\
             Exception: If the representative has FULLY resolved your issue AND you explicitly state satisfaction, you may respond with "FINISH:999" earlier.\
 
             Phrase your responses like an CIVIL customer:\
@@ -472,7 +472,7 @@ class mAgentCustomer:
             If the representative is asking for a specific detail, respond with a believable answer.\
 
             TURN LIMIT: Count the number of representative messages in the chat history.\
-            - After the 12th representative response: Reply ONLY with "FINISH:999"\
+            - After the 6th representative response: Reply ONLY with "FINISH:999"\
             Exception: If the representative has FULLY resolved your issue AND you explicitly state satisfaction, you may respond with "FINISH:999" earlier.\
 
             Phrase your responses like an UNCIVIL customer:\

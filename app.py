@@ -478,9 +478,9 @@ def storePreSurvey(session_id):
         # assigned_condition = "no_agents"
         # assigned_condition = "emo_only"
         # assigned_condition = "info_only"
-        # assigned_condition = "both_agents"
-        # PRODUCTION:
-        assigned_condition = assign_condition(emotion_regulation_type)
+        assigned_condition = "both_agents"
+        # PRODUCTION: Uncomment below and comment out the forced assignment above:
+        # assigned_condition = assign_condition(emotion_regulation_type)
 
         if assigned_condition is None:
             # No conditions have space for this suppressor type - redirect out
@@ -740,8 +740,8 @@ def getReply(session_id):
         # Count representative messages (HumanMessage objects in chat history)
         rep_message_count = sum(1 for msg in chat_history if isinstance(msg, HumanMessage))
 
-        # Force FINISH after 12 representative turns
-        if rep_message_count >= 12:
+        # Force FINISH after 6 representative turns
+        if rep_message_count >= 6:
             response = "FINISH:999"
         else:
             result = sender_agent.invoke({"input": prompt, "chat_history": chat_history, "civil": session[session_id][client_id]["civil"]})
