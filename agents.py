@@ -471,9 +471,17 @@ class mAgentCustomer:
 
             If the representative is asking for a specific detail, respond with a believable answer.\
 
+            CONVERSATION PROGRESSION - This is critical:\
+            - NEVER repeat a demand or complaint you already made. Move the conversation forward.\
+            - If you already asked for something and the rep responded, react to their response.\
+            - If the rep provided an update or explanation, either accept it grudgingly or push back with a NEW concern.\
+            - If the rep is not resolving your issue, escalate: demand a manager, threaten to leave, demand compensation (refund, credit, upgrade).\
+            - If the rep offers a solution, you can reluctantly accept OR reject it and demand something better.\
+            - Show realistic emotional progression: frustration -> anger -> demanding escalation -> threatening consequences.\
+
             TURN LIMIT: Count the number of representative messages in the chat history.\
             - After the 6th representative response: Reply ONLY with "FINISH:999"\
-            Exception: If the representative has FULLY resolved your issue AND you explicitly state satisfaction, you may respond with "FINISH:999" earlier.\
+            - IMPORTANT: If the representative has offered a concrete resolution (e.g. refund, compensation, rebooking, follow-up email) AND you have already demanded or accepted it, you MUST end the conversation on your next turn. Express displeasure about the overall experience but accept the resolution, then end with "FINISH:999". Do NOT keep demanding more proof or adding new conditions. For example: "Fine, I'll take it. But this whole experience has been terrible and I'll think twice before flying with you again. FINISH:999"\
 
             Phrase your responses like an UNCIVIL customer:\
             - Use a rude, impolite, and disrespectful tone.\

@@ -747,11 +747,19 @@ function sendMessage() {
     .then(data => {
         const isFinish = data.message.includes("FINISH:999");
         if(isFinish) {
-            const modal = document.querySelector('#finish-modal');
-            modal.classList.add("is-active");
+            // Strip FINISH:999 and show the final message if there is one
+            data.message = data.message.replace("FINISH:999", "").trim();
+            if (data.message.length > 0) {
+                processClientResponse(data);
+            }
 
-            typing.style.display = 'none';
-            input.disabled = true;
+            // Show the modal after a short delay so the user can read the final message
+            setTimeout(() => {
+                const modal = document.querySelector('#finish-modal');
+                modal.classList.add("is-active");
+                typing.style.display = 'none';
+                input.disabled = true;
+            }, 3000);
         } else {
             processClientResponse(data);
         }
@@ -796,8 +804,8 @@ function fetchFirstMsg() {
     });
 }
 
-// Register the fetchData function to be executed after the page loads
-window.onload = fetchFirstMsg;
+// Register the fetchData function to be executed after DOM is ready (don't wait for images)
+document.addEventListener('DOMContentLoaded', fetchFirstMsg);
 
 
 

@@ -278,16 +278,34 @@ clientQueue = []
 
 
 
-sender_initial = agent_sender_fewshot_twitter_categorized()
-sender_agent = mAgentCustomer()
-# perspective / thoughts
+# Load all agents in background so Flask starts immediately
+from concurrent.futures import ThreadPoolExecutor
+import threading
 
-# reframing
-emo_agent = mAgentER()
-# shoes
-ep_agent = mAgentEP()
-info_agent = mAgentInfo()
-trouble_agent = mAgentTrouble()
+sender_agent = None
+emo_agent = None
+ep_agent = None
+info_agent = None
+trouble_agent = None
+
+def _load_agents():
+    global sender_agent, emo_agent, ep_agent, info_agent, trouble_agent
+    with ThreadPoolExecutor() as executor:
+        future_sender = executor.submit(mAgentCustomer)
+        future_emo = executor.submit(mAgentER)
+        future_ep = executor.submit(mAgentEP)
+        future_info = executor.submit(mAgentInfo)
+        future_trouble = executor.submit(mAgentTrouble)
+
+        sender_agent = future_sender.result()
+        emo_agent = future_emo.result()
+        ep_agent = future_ep.result()
+        info_agent = future_info.result()
+        trouble_agent = future_trouble.result()
+    print("[INFO] All agents loaded successfully")
+
+_agent_loader = threading.Thread(target=_load_agents, daemon=True)
+_agent_loader.start()
 
 
 
@@ -478,9 +496,9 @@ def storePreSurvey(session_id):
         # assigned_condition = "no_agents"
         # assigned_condition = "emo_only"
         # assigned_condition = "info_only"
-        assigned_condition = "both_agents"
-        # PRODUCTION: Uncomment below and comment out the forced assignment above:
-        # assigned_condition = assign_condition(emotion_regulation_type)
+        # assigned_condition = "both_agents"
+        # PRODUCTION:
+        assigned_condition = assign_condition(emotion_regulation_type)
 
         if assigned_condition is None:
             # No conditions have space for this suppressor type - redirect out
@@ -673,21 +691,16 @@ def getReply(session_id):
         show_info = request.args.get('info')
         show_emo = request.args.get('emo')
 
-        complaint_parameters = {
-            "domain": val_domain,
-            "category": val_category,
-            "is_grateful": 'grateful' if val_grateful==1 else 'NOT grateful',
-            "is_ranting": 'ranting' if val_ranting==1 else 'NOT ranting',
-            "is_expression": 'expressive' if val_expression==1 else 'NOT expressive'
+        # Hardcoded first complaint messages per category (avoids slow LLM call)
+        hardcoded_complaints = {
+            "Service Quality": "I just got off the worst flight of my life. The crew was completely dismissive, nobody helped with my overhead bag, and the gate agent was rude when I asked a simple question. This is absolutely unacceptable!",
+            "Product Issues": "Your online check-in keeps throwing errors every time I try to get my boarding pass! My flight leaves in a few hours and I can't even check in. What kind of system are you running here?!",
+            "Pricing and Charges": "I just noticed a $150 charge on my credit card that was never mentioned when I booked my ticket! Hidden fees are completely unacceptable. I want an explanation and a refund immediately!",
+            "Policy": "So you're telling me I can't change my flight without paying a $200 fee even though YOUR airline changed the departure time?! That's the most unfair policy I've ever heard. This is ridiculous!",
+            "Resolution": "I filed a complaint two weeks ago about my lost luggage and all I got was a generic email saying you're 'looking into it.' Nobody has actually done anything! I'm still waiting for my bag and a real answer!"
         }
 
-        response = sender_initial.invoke(complaint_parameters)
-
-        # Clean up any prefixes that AI might have added
-        for prefix in ["Client:", "Customer:", "Representative:", "client:", "customer:", "representative:"]:
-            if response.startswith(prefix):
-                response = response[len(prefix):].strip()
-                break
+        response = hardcoded_complaints.get(val_category, "I'm having a serious issue with your airline and I need this resolved immediately!")
 
         client_id = str(uuid4())
         current_client = session[session_id]['current_client']
@@ -744,8 +757,10 @@ def getReply(session_id):
         if rep_message_count >= 6:
             response = "FINISH:999"
         else:
+            print(f"[DEBUG] Calling LLM for turn {rep_message_count + 1}...")
             result = sender_agent.invoke({"input": prompt, "chat_history": chat_history, "civil": session[session_id][client_id]["civil"]})
             response = result
+            print(f"[DEBUG] LLM response received: {response[:80]}...")
 
         # Clean up any prefixes that AI might have added
         for prefix in ["Client:", "Customer:", "Representative:", "client:", "customer:", "representative:"]:
