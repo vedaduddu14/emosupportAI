@@ -670,6 +670,21 @@ function processClientResponse(data) {
 
   updateFlag('client_response');
 
+  if (data.show_info == '1' || data.show_emo == '1') {
+    // Show instruction notice at the very top of the sidebar, before any agent content
+    const sidebarRight = document.getElementById('sidebar-right');
+    let notice = document.getElementById('agent-notice');
+    if (!notice) {
+      notice = document.createElement('div');
+      notice.id = 'agent-notice';
+      notice.classList.add('notification', 'is-info', 'is-light');
+      notice.style.marginBottom = '8px';
+      notice.style.margin = '12px 16px 8px 12px';
+      notice.textContent = 'Please review the AI suggestions below and rate them before responding to the customer.';
+      sidebarRight.prepend(notice);
+    }
+  }
+
   if (data.show_info == '1') {
     const infoDiv = document.getElementById('co-pilot');
     infoDiv.innerHTML = '';
