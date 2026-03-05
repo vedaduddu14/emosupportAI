@@ -52,11 +52,18 @@ if not os.path.exists(DATA_DIR):
 COUNTS_FILE = "participant_counts.json"
 MAX_PER_CONDITION_PER_TYPE = 4
 
+def get_participant_dir(session_id):
+    """Return the data directory for a participant, named by Prolific ID when available."""
+    prolific_id = session.get(session_id, {}).get('prolific_id', '').strip()
+    folder_name = prolific_id if prolific_id else session_id
+    return os.path.join(DATA_DIR, folder_name)
+
+
 def save_session_data(session_id, data_type, data):
     """Save session data to JSON file"""
     try:
         # Create participant directory
-        participant_dir = os.path.join(DATA_DIR, session_id)
+        participant_dir = get_participant_dir(session_id)
         if not os.path.exists(participant_dir):
             os.makedirs(participant_dir)
 
@@ -81,7 +88,7 @@ def save_session_data(session_id, data_type, data):
 def save_ai_suggestion(session_id, client_id, turn_number, support_type, support_content, round_num=None):
     """Append AI agent suggestion to ai_suggestions file"""
     try:
-        participant_dir = os.path.join(DATA_DIR, session_id)
+        participant_dir = get_participant_dir(session_id)
         if not os.path.exists(participant_dir):
             os.makedirs(participant_dir)
 
@@ -118,7 +125,7 @@ def save_ai_suggestion(session_id, client_id, turn_number, support_type, support
 def save_slider_feedback(session_id, client_id, turn_number, support_type, slider_value, round_num=None):
     """Append slider feedback to ai_feedback file"""
     try:
-        participant_dir = os.path.join(DATA_DIR, session_id)
+        participant_dir = get_participant_dir(session_id)
         if not os.path.exists(participant_dir):
             os.makedirs(participant_dir)
 
@@ -155,7 +162,7 @@ def save_slider_feedback(session_id, client_id, turn_number, support_type, slide
 def save_chat_message(session_id, client_id, turn_number, sender, receiver, message, round_num=None):
     """Append chat message to chat history file"""
     try:
-        participant_dir = os.path.join(DATA_DIR, session_id)
+        participant_dir = get_participant_dir(session_id)
         if not os.path.exists(participant_dir):
             os.makedirs(participant_dir)
 
@@ -318,7 +325,8 @@ def launch():
     # Password check temporarily disabled for testing
     # val_pwd = request.args.get('pwd')
     # if val_pwd == common.ADMIN_PWD:
-    return redirect(url_for('start_chat', scenario='Airline'))
+    prolific_id = request.args.get('prolific_id', '')
+    return redirect(url_for('start_chat', scenario='Airline', prolific_id=prolific_id))
     # else:
     #     return "Access restricted to participants", 401
 
@@ -357,6 +365,7 @@ def start_chat(scenario):
     session_id = str(uuid4())   ### unique to each user/participant/representative
     current_client = full_queue[0]  # Round 1 client (don't pop yet)
     session[session_id] = {}
+    session[session_id]['prolific_id'] = request.args.get('prolific_id', '')
     session[session_id]['current_client'] = current_client
     session[session_id]['scenario'] = scenario  # Store scenario for later use
     session[session_id]['full_queue'] = full_queue  # Store FULL queue with both clients
@@ -643,7 +652,7 @@ def attention_check_failed(session_id):
 
     # Save attention check failure to participant data
     if session_id in session:
-        participant_dir = os.path.join(DATA_DIR, session_id)
+        participant_dir = get_participant_dir(session_id)
         if not os.path.exists(participant_dir):
             os.makedirs(participant_dir)
 
@@ -1004,7 +1013,7 @@ def storeMouseTracking(session_id):
             session[session_id][round_key] = data
 
             # Save to participant directory
-            participant_dir = os.path.join(DATA_DIR, session_id)
+            participant_dir = get_participant_dir(session_id)
             if not os.path.exists(participant_dir):
                 os.makedirs(participant_dir)
 
@@ -1175,7 +1184,20 @@ def complete():
     session_id = request.args.get('session_id')
     if not session_id:
         return "Session ID is missing", 400
-    return render_template('complete.html', session_id=session_id)
+    prolific_id = session.get(session_id, {}).get('prolific_id', '') if session_id in session else ''
+    return render_template('complete.html', session_id=session_id, prolific_id=prolific_id)
+
+
+@app.route('/store-prolific-exit/<session_id>/', methods=['POST'])
+def storeProlificExit(session_id):
+    data = request.get_json()
+    prolific_id_exit = data.get('prolific_id', '')
+    prolific_id_entry = session.get(session_id, {}).get('prolific_id', '') if session_id in session else ''
+    save_session_data(session_id, 'prolific_ids', {
+        'prolific_id_entry': prolific_id_entry,
+        'prolific_id_exit': prolific_id_exit
+    })
+    return jsonify({"message": "Prolific ID saved"}), 200
 
 @app.route('/history/<session_id>/<client_id>/')
 def getClientHistory(session_id, client_id):

@@ -18,10 +18,6 @@
             height: auto;
             margin-bottom: 20px;
         }
-        .survey-link {
-            font-size: 20px;
-            margin-top: 20px;
-        }
     </style>
     <script type="text/javascript">
         function goToHistoryPage(session_id) {
@@ -33,31 +29,79 @@
                 alert('Session ID is missing');
             }
         }
+
+        function submitProlificId() {
+            var prolificId = document.getElementById('prolific_id_exit').value.trim();
+            if (!prolificId) {
+                document.getElementById('prolific_exit_error').style.display = 'block';
+                document.getElementById('prolific_id_exit').focus();
+                return;
+            }
+            document.getElementById('prolific_exit_error').style.display = 'none';
+
+            fetch('/store-prolific-exit/{{ session_id }}/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({prolific_id: prolificId})
+            }).then(function() {
+                document.getElementById('prolific-entry-section').style.display = 'none';
+                document.getElementById('thankyou-section').style.display = 'block';
+            }).catch(function() {
+                // Show thank-you even if save fails
+                document.getElementById('prolific-entry-section').style.display = 'none';
+                document.getElementById('thankyou-section').style.display = 'block';
+            });
+        }
     </script>
 </head>
 <body>
     <div class="container">
         <img src="{{ url_for('static', filename='pro-graphic.png') }}" alt="Logo" class="logo">
 
-        <h1 class="title is-3" style="margin-top: 40px;">Thank You!</h1>
-        <p class="subtitle is-5" style="margin-top: 20px;">
-            You have successfully completed the study.
-        </p>
-        <p class="subtitle is-5" style="margin-top: 10px; color: #4a4a4a;">
-            You will now be redirected back to Prolific with your completion code.
-        </p>
-
-        <!-- Temporary note for testing -->
-        <div class="notification is-info is-light" style="max-width: 600px; margin: 40px auto;">
-            <p><strong>Note for testing:</strong> Prolific redirect with completion code will be implemented in the production version.</p>
+        <!-- Step 1: Prolific ID entry -->
+        <div id="prolific-entry-section">
+            <h1 class="title is-3" style="margin-top: 40px;">Almost Done!</h1>
+            <p class="subtitle is-5" style="margin-top: 20px;">
+                Please confirm your Prolific ID to complete the study.
+            </p>
+            <div style="max-width: 400px; margin: 30px auto; text-align: left;">
+                <div class="field">
+                    <label class="label" for="prolific_id_exit">Your Prolific ID</label>
+                    <div class="control">
+                        <input class="input" type="text" id="prolific_id_exit"
+                               placeholder="Enter your Prolific ID"
+                               value="{{ prolific_id }}">
+                    </div>
+                    <p id="prolific_exit_error" class="help is-danger" style="display:none;">Please enter your Prolific ID.</p>
+                </div>
+                <button class="button is-primary" onclick="submitProlificId();" style="margin-top: 0.5rem;">
+                    Complete Study
+                </button>
+            </div>
         </div>
 
-        <!-- Optional: View conversation history (can be removed for production) -->
-        <div style="margin-top: 30px;">
-            <button class="button is-light" onclick="goToHistoryPage('{{ session_id }}')">
-                <span class="icon"><i class="fas fa-history"></i></span>
-                <span>View Conversation History</span>
-            </button>
+        <!-- Step 2: Thank-you message (shown after Prolific ID submission) -->
+        <div id="thankyou-section" style="display:none;">
+            <h1 class="title is-3" style="margin-top: 40px;">Thank You!</h1>
+            <p class="subtitle is-5" style="margin-top: 20px;">
+                You have successfully completed the study.
+            </p>
+            <p class="subtitle is-5" style="margin-top: 10px; color: #4a4a4a;">
+                You will now be redirected back to Prolific with your completion code.
+            </p>
+
+            <!-- Temporary note for testing -->
+            <div class="notification is-info is-light" style="max-width: 600px; margin: 40px auto;">
+                <p><strong>Note for testing:</strong> Prolific redirect with completion code will be implemented in the production version.</p>
+            </div>
+
+            <!-- Optional: View conversation history (can be removed for production) -->
+            <div style="margin-top: 30px;">
+                <button class="button is-light" onclick="goToHistoryPage('{{ session_id }}')">
+                    <span class="icon"><i class="fas fa-history"></i></span>
+                    <span>View Conversation History</span>
+                </button>
+            </div>
         </div>
     </div>
 </body>

@@ -1,5 +1,29 @@
 var turn_number = 0;
 
+const AGENT_TIMEOUT_MS = 120000; // 2 minutes
+
+function fetchWithTimeout(url, options) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), AGENT_TIMEOUT_MS);
+    return fetch(url, { ...options, signal: controller.signal })
+        .finally(() => clearTimeout(timeoutId));
+}
+
+function showAgentError() {
+    const existing = document.getElementById('agent-error-banner');
+    if (existing) return; // only show once
+
+    const banner = document.createElement('div');
+    banner.id = 'agent-error-banner';
+    banner.classList.add('notification', 'is-danger');
+    banner.style.margin = '12px';
+    banner.innerHTML = '<strong>A technical error has occurred.</strong> Please contact the study team for assistance: ' +
+        '<a href="mailto:hanyimin@illinois.edu">hanyimin@illinois.edu</a>';
+
+    // Insert at top of page body so it's always visible
+    document.body.insertBefore(banner, document.body.firstChild);
+}
+
 function getPropilotAvatar() {
     const avatarContainer = document.createElement('div');
     avatarContainer.classList.add('card-header-icon');
@@ -405,7 +429,8 @@ function retrieveInfoSupport(message,support_type) {
       updateFlag('support_info');
     })
     .catch((error) => {
-      console.error('Error:', error);
+      console.error('Info agent error:', error);
+      showAgentError();
     });
 }
 
@@ -477,7 +502,10 @@ function retrieveEmoSupport(message, support_type) {
 
         updateFlag('support_emo_sentiment');
       })
-      .catch((error) => console.error('Error:', error));
+      .catch((error) => {
+        console.error('Sentiment agent error:', error);
+        showAgentError();
+      });
   } else {
     fetch(`/get-emo-support/${sessionId}/`, {
       method: 'POST',
@@ -520,7 +548,8 @@ function retrieveEmoSupport(message, support_type) {
         }
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error('Emo agent error:', error);
+        showAgentError();
       });
   }
 }
@@ -654,7 +683,8 @@ function retrieveTroubleSupport(message, support_type) {
       updateFlag('support_trouble');
     })
     .catch((error) => {
-      console.error('Error:', error);
+      console.error('Trouble agent error:', error);
+      showAgentError();
     });
 }
 
@@ -751,7 +781,7 @@ function sendMessage() {
     // retrieveEmoFeedback(TYPE_SENTIMENT);
   }
 
-    fetch(`/get-reply/${sessionId}/`, {
+    fetchWithTimeout(`/get-reply/${sessionId}/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -780,7 +810,9 @@ function sendMessage() {
         }
     })
     .catch((error) => {
-        console.error('Error:', error);
+        console.error('Customer agent error:', error);
+        typing.style.display = 'none';
+        showAgentError();
     });
     }
 
@@ -797,7 +829,7 @@ function fetchFirstMsg() {
     const sessionId = window.location.pathname.split('/')[2];
 
     // Make a GET request using fetch
-    fetch(`/get-reply/${sessionId}/?${urlParams}`)
+    fetchWithTimeout(`/get-reply/${sessionId}/?${urlParams}`, {})
     .then(response => {
         // Check if the request was successful
         if (!response.ok) {
@@ -814,8 +846,8 @@ function fetchFirstMsg() {
         processClientResponse(data);
     })
     .catch(error => {
-        // Handle any errors that occur during the request
-        console.error('Error fetching data:', error);
+        console.error('Customer agent error (first message):', error);
+        showAgentError();
     });
 }
 

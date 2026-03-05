@@ -3,7 +3,14 @@
 
 <script>
     function launchTesting() {
-        window.location.href = '/launch';
+        var prolificId = document.getElementById('prolific_id_input').value.trim();
+        if (!prolificId) {
+            document.getElementById('prolific_id_error').style.display = 'block';
+            document.getElementById('prolific_id_input').focus();
+            return;
+        }
+        document.getElementById('prolific_id_error').style.display = 'none';
+        window.location.href = '/launch/?prolific_id=' + encodeURIComponent(prolificId);
     }
 </script>
 
@@ -82,7 +89,7 @@
                                 <li>Each round is independent, so please treat each customer as a new situation.</li>
                             </ul>
 
-                            <p style="text-align: left;">After completing both customer interactions, you will answer a brief questionnaire about your experience.</p>
+                            <p style="text-align: left;">After completing each round, you will answer a brief questionnaire about your experience.</p>
 
                             <p style="text-align: left;">Earn up to <strong>$5</strong> through Prolific platform. Your compensation will depend on the quality, attentiveness, and effort demonstrated in your responses.</p>
 
@@ -105,7 +112,14 @@
 
                             <div class="block column">
                                 <div class="block">
-                                    <div class="buttons">
+                                    <div class="field">
+                                        <label class="label" for="prolific_id_input">Your Prolific ID</label>
+                                        <div class="control">
+                                            <input class="input" type="text" id="prolific_id_input" placeholder="Enter your Prolific ID">
+                                        </div>
+                                        <p id="prolific_id_error" class="help is-danger" style="display:none;">Please enter your Prolific ID before joining the study.</p>
+                                    </div>
+                                    <div class="buttons" style="margin-top: 0.75rem;">
                                         <button class="button is-primary" onclick="launchTesting();">Join Study</button>
 <!--                                        Original Qualtrics link (disabled for testing): https://neu.co1.qualtrics.com/jfe/form/SV_dmtvecyXQvZcNaC -->
                                     </div>
