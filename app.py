@@ -50,7 +50,7 @@ if not os.path.exists(DATA_DIR):
 
 # Participant count management
 COUNTS_FILE = "participant_counts.json"
-MAX_PER_CONDITION_PER_TYPE = 4
+MAX_PER_CONDITION_PER_TYPE = 30
 
 def get_participant_dir(session_id):
     """Return the data directory for a participant, named by Prolific ID when available."""
