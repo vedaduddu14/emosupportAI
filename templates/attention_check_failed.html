@@ -24,18 +24,15 @@
         <div class="content">
             <p>Thank you for your participation. Unfortunately, you did not meet the attention check criteria for this study.</p>
 
-            <p>Please return to Prolific using the completion code below:</p>
-
-            <div class="box has-text-centered">
-                <p class="is-size-5 has-text-weight-bold">Completion Code:</p>
-                <p class="is-size-3 has-text-primary has-text-weight-bold" style="letter-spacing: 2px;">
-                    PLACEHOLDER_CODE
-                </p>
-            </div>
-
-            <p class="has-text-grey">
-                <em>Note: This completion code will be replaced with the actual Prolific completion code.</em>
+            <p>You will now be redirected back to Prolific. If you are not redirected automatically,
+                <a href="https://app.prolific.com/submissions/complete?cc=CBFQQKLT">click here</a>.
             </p>
+
+            <script>
+                setTimeout(function() {
+                    window.location.href = 'https://app.prolific.com/submissions/complete?cc=CBFQQKLT';
+                }, 3000);
+            </script>
         </div>
     </div>
 </div>
