@@ -309,7 +309,8 @@ _agent_loader.start()
 
 @app.route('/')
 def hello():
-    return render_template('landing.html')
+    prolific_id = request.args.get('PROLIFIC_PID', '') or request.args.get('prolific_id', '')
+    return render_template('landing.html', prolific_id=prolific_id)
 
 @app.route('/launch/')
 def launch():
