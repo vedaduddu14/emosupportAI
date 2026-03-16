@@ -38,18 +38,33 @@
                 return;
             }
             document.getElementById('prolific_exit_error').style.display = 'none';
+            document.getElementById('submit-btn').disabled = true;
+            document.getElementById('submit-btn').textContent = 'Saving...';
 
             fetch('/store-prolific-exit/{{ session_id }}/', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({prolific_id: prolificId})
-            }).then(function() {
-                document.getElementById('prolific-entry-section').style.display = 'none';
-                document.getElementById('thankyou-section').style.display = 'block';
+            }).then(function(response) {
+                if (!response.ok) {
+                    document.getElementById('submit-btn').disabled = false;
+                    document.getElementById('submit-btn').textContent = 'Complete Study';
+                    document.getElementById('gate-error').style.display = 'block';
+                    document.getElementById('gate-error-pid').textContent = prolificId;
+                    return;
+                }
+                return response.json().then(function(result) {
+                    var redirectUrl = result.redirect_url;
+                    document.getElementById('prolific-entry-section').style.display = 'none';
+                    document.getElementById('thankyou-section').style.display = 'block';
+                    document.getElementById('prolific-link').href = redirectUrl;
+                    setTimeout(function() { window.location.href = redirectUrl; }, 3000);
+                });
             }).catch(function() {
-                // Show thank-you even if save fails
-                document.getElementById('prolific-entry-section').style.display = 'none';
-                document.getElementById('thankyou-section').style.display = 'block';
+                document.getElementById('submit-btn').disabled = false;
+                document.getElementById('submit-btn').textContent = 'Complete Study';
+                document.getElementById('gate-error').style.display = 'block';
+                document.getElementById('gate-error-pid').textContent = prolificId;
             });
         }
     </script>
@@ -74,9 +89,12 @@
                     </div>
                     <p id="prolific_exit_error" class="help is-danger" style="display:none;">Please enter your Prolific ID.</p>
                 </div>
-                <button class="button is-primary" onclick="submitProlificId();" style="margin-top: 0.5rem;">
+                <button id="submit-btn" class="button is-primary" onclick="submitProlificId();" style="margin-top: 0.5rem;">
                     Complete Study
                 </button>
+            </div>
+            <div id="gate-error" style="display:none; max-width:500px; margin: 20px auto; padding: 16px; background:#fff3cd; border:1px solid #ffc107; border-radius:6px; text-align:left;">
+                <p><strong>Something went wrong saving your data.</strong> Please reach out to the study point of contact on the Prolific platform with your Prolific ID: <strong><span id="gate-error-pid"></span></strong></p>
             </div>
         </div>
 
@@ -88,14 +106,8 @@
             </p>
             <p class="subtitle is-5" style="margin-top: 10px; color: #4a4a4a;">
                 You will now be redirected back to Prolific. If you are not redirected automatically,
-                <a href="https://app.prolific.com/submissions/complete?cc=CNNRVFR9">click here</a>.
+                <a id="prolific-link" href="#">click here</a>.
             </p>
-
-            <script>
-                setTimeout(function() {
-                    window.location.href = 'https://app.prolific.com/submissions/complete?cc=CNNRVFR9';
-                }, 3000);
-            </script>
         </div>
     </div>
 </body>

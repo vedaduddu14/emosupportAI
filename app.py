@@ -44,12 +44,12 @@ app.config['SESSION_TYPE'] = 'filesystem'   ### Default Flask approach
 Session(app)
 
 # Data storage directory
-DATA_DIR = "study_data"
+DATA_DIR = "study_data_round_1"
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
 # Participant count management
-COUNTS_FILE = "participant_counts.json"
+COUNTS_FILE = "participant_counts.json"  # verified completions — source of truth for slot availability
 MAX_PER_CONDITION_PER_TYPE = 30
 
 def get_participant_dir(session_id):
@@ -237,30 +237,21 @@ def is_study_full():
 
 def assign_condition(emotion_regulation_type):
     """
-    Assign participant to a condition based on availability for their suppressor type.
-    First determines which conditions have space for this type, then randomly picks one.
+    Assign participant to a condition based on verified completion counts.
+    Does NOT increment — the count only moves when a participant fully completes.
     Returns condition name or None if all conditions are full for this type.
     """
     counts = load_participant_counts()
 
-    # Find available conditions (< 30 for this emotion regulation type)
     available_conditions = []
     for condition, type_counts in counts.items():
         if type_counts[emotion_regulation_type] < MAX_PER_CONDITION_PER_TYPE:
             available_conditions.append(condition)
 
-    # If no conditions available, return None
     if not available_conditions:
         return None
 
-    # Randomly pick from available conditions
-    chosen_condition = random.choice(available_conditions)
-
-    # Increment count and save
-    counts[chosen_condition][emotion_regulation_type] += 1
-    save_participant_counts(counts)
-
-    return chosen_condition
+    return random.choice(available_conditions)
 
 ### Mongo DB
 # db = client[DB_NAME]
@@ -325,7 +316,7 @@ def launch():
     # Password check temporarily disabled for testing
     # val_pwd = request.args.get('pwd')
     # if val_pwd == common.ADMIN_PWD:
-    prolific_id = request.args.get('prolific_id', '')
+    prolific_id = request.args.get('PROLIFIC_PID', '') or request.args.get('prolific_id', '')
     return redirect(url_for('start_chat', scenario='Airline', prolific_id=prolific_id))
     # else:
     #     return "Access restricted to participants", 401
@@ -365,7 +356,7 @@ def start_chat(scenario):
     session_id = str(uuid4())   ### unique to each user/participant/representative
     current_client = full_queue[0]  # Round 1 client (don't pop yet)
     session[session_id] = {}
-    session[session_id]['prolific_id'] = request.args.get('prolific_id', '')
+    session[session_id]['prolific_id'] = request.args.get('PROLIFIC_PID', '') or request.args.get('prolific_id', '')
     session[session_id]['current_client'] = current_client
     session[session_id]['scenario'] = scenario  # Store scenario for later use
     session[session_id]['full_queue'] = full_queue  # Store FULL queue with both clients
@@ -667,6 +658,10 @@ def attention_check_failed(session_id):
         with open(failure_file, 'w') as f:
             json.dump(failure_data, f, indent=2)
         print(f"[ATTENTION CHECK] Failure logged to {failure_file}")
+
+        # Invalidate session so participant cannot continue the study
+        session.pop(session_id, None)
+        print(f"[ATTENTION CHECK] Session {session_id} invalidated")
 
     return render_template('attention_check_failed.html', session_id=session_id)
 
@@ -1188,16 +1183,98 @@ def complete():
     return render_template('complete.html', session_id=session_id, prolific_id=prolific_id)
 
 
+COMPLETIONS_CSV = "completions.csv"
+
+def _check_completion_gate(participant_dir):
+    """
+    Verify all required files exist and are valid.
+    Returns (passed: bool, reason: str).
+    """
+    required_files = [
+        'pre_task_survey.json',
+        'post_round1_survey.json',
+        'chat_history.json',
+        'mouse_tracking_round_1.json',
+        'mouse_tracking_round_2.json',
+        'post_task_survey.json',
+        'demographics_survey.json',
+    ]
+    for fname in required_files:
+        if not os.path.exists(os.path.join(participant_dir, fname)):
+            return False, f"missing {fname}"
+
+    # Attention check must NOT have failed
+    if os.path.exists(os.path.join(participant_dir, 'attention_check_failed.json')):
+        return False, "attention_check_failed.json present"
+
+    # chat_history must contain messages from both round 1 and round 2
+    try:
+        with open(os.path.join(participant_dir, 'chat_history.json')) as f:
+            chat_data = json.load(f)
+        messages = chat_data if isinstance(chat_data, list) else chat_data.get('messages', [])
+        rounds_present = {msg.get('round') for msg in messages if isinstance(msg, dict)}
+        if 1 not in rounds_present or 2 not in rounds_present:
+            return False, f"chat_history missing round data (found rounds: {rounds_present})"
+    except Exception as e:
+        return False, f"chat_history.json unreadable: {e}"
+
+    return True, "ok"
+
+
+def _append_completion_csv(prolific_id, session_id, condition, emotion_regulation_type):
+    """Append a row to completions.csv, creating with header if needed."""
+    import csv
+    fieldnames = ['timestamp', 'prolific_id', 'session_id', 'condition', 'emotion_regulation_type']
+    file_exists = os.path.exists(COMPLETIONS_CSV)
+    with open(COMPLETIONS_CSV, 'a', newline='') as f:
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow({
+            'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'prolific_id': prolific_id,
+            'session_id': session_id,
+            'condition': condition,
+            'emotion_regulation_type': emotion_regulation_type,
+        })
+        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+
+
 @app.route('/store-prolific-exit/<session_id>/', methods=['POST'])
 def storeProlificExit(session_id):
     data = request.get_json()
     prolific_id_exit = data.get('prolific_id', '')
     prolific_id_entry = session.get(session_id, {}).get('prolific_id', '') if session_id in session else ''
+
+    participant_dir = get_participant_dir(session_id)
+
+    # Server-side gate: verify all required data was saved
+    passed, reason = _check_completion_gate(participant_dir)
+    if not passed:
+        print(f"[GATE FAIL] session={session_id}, reason={reason}")
+        return jsonify({"error": "incomplete", "reason": reason}), 400
+
+    # Gate passed — save prolific IDs
     save_session_data(session_id, 'prolific_ids', {
         'prolific_id_entry': prolific_id_entry,
         'prolific_id_exit': prolific_id_exit
     })
-    return jsonify({"message": "Prolific ID saved"}), 200
+
+    # Increment completion count — this is what gates future assignments
+    condition = session.get(session_id, {}).get('round2_condition', 'unknown') if session_id in session else 'unknown'
+    emotion_regulation_type = session.get(session_id, {}).get('emotion_regulation_type', 'unknown') if session_id in session else 'unknown'
+    if condition != 'unknown' and emotion_regulation_type != 'unknown':
+        counts = load_participant_counts()
+        if condition in counts and emotion_regulation_type in counts[condition]:
+            counts[condition][emotion_regulation_type] += 1
+            save_participant_counts(counts)
+            print(f"[COMPLETION] Incremented count: {condition}/{emotion_regulation_type}")
+
+    # Log to CSV
+    _append_completion_csv(prolific_id_exit, session_id, condition, emotion_regulation_type)
+
+    return jsonify({"redirect_url": "https://app.prolific.com/submissions/complete?cc=CNNRVFR9"}), 200
 
 @app.route('/history/<session_id>/<client_id>/')
 def getClientHistory(session_id, client_id):
